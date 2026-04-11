@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理画面 - ショップカワイ本店</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f9f9f7;color:#1a1a18;font-size:15px}
+
+/* ========== 共通 ========== */
+.btn{padding:7px 16px;border:1px solid #d0d0cc;border-radius:8px;font-size:13px;cursor:pointer;background:#fff;color:#1a1a18}
+.btn:hover{background:#f3f3f0}
+.btn.primary{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.btn.primary:hover{opacity:.85}
+.btn.danger{color:#c0392b;border-color:#f5c0bb}
+.btn.danger:hover{background:#fdf0ee}
+.btn.sm{padding:5px 11px;font-size:12px}
+.status-badge{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;display:inline-block;line-height:1.5}
+.cat-badge{font-size:11px;padding:2px 7px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
+.cond-badge{font-size:11px;padding:2px 7px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
+.s-in1{background:#e1f5ee;color:#085041}
+.s-in2{background:#d4f0e6;color:#0f6e56}
+.s-rsv{background:#e6f1fb;color:#0c447c}
+.s-ord1{background:#faeeda;color:#633806}
+.s-ord2{background:#f5e4c8;color:#854f0b}
+.s-noin{background:#f0f0ec;color:#999}
+.s-end{background:#fdecea;color:#c0392b}
+.s-hid{background:#f0f0ec;color:#999;font-style:italic}
+
+/* ========== ヘッダー ========== */
+.site-header{background:#1a1a18;padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+.site-logo{font-size:15px;font-weight:600;color:#fff;letter-spacing:.02em}
+.header-sub{font-size:12px;color:#888;margin-left:10px}
+.back-link{font-size:13px;color:#aaa;cursor:pointer;padding:5px 12px;border:1px solid #444;border-radius:6px}
+.back-link:hover{color:#fff;border-color:#888}
+
+/* ========== タブ ========== */
+.admin-tabs{background:#fff;border-bottom:1px solid #e8e8e4;display:flex;padding:0 20px}
+.admin-tab{padding:11px 18px;font-size:14px;cursor:pointer;color:#999;border-bottom:2px solid transparent;margin-bottom:-1px}
+.admin-tab.active{color:#1a1a18;border-bottom-color:#1a1a18;font-weight:500}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ========== 商品管理 ========== */
+.admin-header{padding:13px 20px;border-bottom:1px solid #e8e8e4;background:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.admin-title{font-size:15px;font-weight:600;color:#1a1a18}
+.admin-btns{display:flex;gap:8px;flex-wrap:wrap}
+.admin-toolbar{padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e8e8e4;background:#fafaf8}
+.admin-search{padding:8px 13px;border:1px solid #d8d8d4;border-radius:8px;font-size:13px;color:#1a1a18;background:#fff;width:210px;outline:none}
+.admin-search:focus{border-color:#888}
+.admin-select{padding:8px 11px;border:1px solid #d8d8d4;border-radius:8px;font-size:13px;color:#1a1a18;background:#fff;max-width:200px}
+.count-label{font-size:13px;color:#999;margin-left:auto}
+
+/* 2行テーブル（管理画面） */
+.admin-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.admin-tbl .r1 td{padding:11px 20px 4px;border-top:1px solid #d0d0cc;vertical-align:middle}
+.admin-tbl .r2 td{padding:3px 20px 11px;vertical-align:top}
+.admin-tbl .r1:first-child td{border-top:none}
+.admin-tbl tr:hover td{background:#f8f8f6}
+.admin-tbl .hidden-row td{opacity:.4}
+.title-cell{min-width:0}
+.meta-cell{font-size:12px;color:#aaa}
+.admin-price-col{text-align:right;white-space:nowrap;font-weight:500;width:100px;vertical-align:middle;padding:11px 20px 4px}
+.admin-action-col{text-align:right;white-space:nowrap;width:100px;vertical-align:middle;padding:11px 20px 4px}
+.act-btn{padding:5px 11px;border:1px solid #d8d8d4;border-radius:6px;font-size:12px;cursor:pointer;background:#fff;color:#1a1a18;margin-left:4px}
+.act-btn:hover{background:#f3f3f0}
+.act-btn.del{color:#c0392b;border-color:#f5c0bb}
+.act-btn.del:hover{background:#fdf0ee}
+
+/* ページネーション */
+.pagination{padding:13px 20px;display:flex;align-items:center;gap:7px;border-top:1px solid #e8e8e4;flex-wrap:wrap;background:#fafaf8}
+.page-btn{padding:6px 13px;border:1px solid #d8d8d4;border-radius:7px;font-size:13px;cursor:pointer;background:#fff;color:#1a1a18}
+.page-btn:hover{background:#f3f3f0}
+.page-btn.active{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.page-info{font-size:13px;color:#999;margin-left:auto}
+
+/* ========== 配送方法管理 ========== */
+.shipping-wrap{padding:20px;max-width:860px}
+.shipping-card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;margin-bottom:14px;overflow:hidden}
+.shipping-card-header{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f0ec}
+.shipping-card-title{font-size:15px;font-weight:600;flex:1}
+.shipping-type-badge{font-size:11px;padding:3px 9px;border-radius:10px;background:#f0f0ec;color:#666}
+.shipping-type-badge.flat{background:#e6f1fb;color:#0c447c}
+.shipping-type-badge.pref{background:#faeeda;color:#633806}
+.shipping-type-badge.free{background:#e1f5ee;color:#085041}
+.default-badge{font-size:11px;padding:3px 9px;border-radius:10px;background:#1a1a18;color:#fff}
+.shipping-card-body{padding:14px 18px;font-size:13px;color:#888}
+.pref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-top:10px}
+.pref-row{display:flex;align-items:center;gap:6px;font-size:12px}
+.pref-name{width:72px;color:#555;flex-shrink:0}
+.pref-input{width:80px;padding:3px 7px;border:1px solid #d8d8d4;border-radius:5px;font-size:12px;text-align:right}
+.add-shipping-btn{background:#fff;border:1px dashed #d0d0cc;border-radius:12px;padding:16px;text-align:center;cursor:pointer;color:#999;font-size:14px;margin-bottom:14px}
+.add-shipping-btn:hover{background:#f5f5f2;color:#555}
+
+/* ========== モーダル共通 ========== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:1px solid #e8e8e4;width:100%;max-width:580px;overflow:hidden}
+.modal-header{padding:15px 18px;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:600;color:#1a1a18}
+.modal-close{background:transparent;border:none;font-size:21px;cursor:pointer;color:#ccc;line-height:1}
+.modal-close:hover{color:#999}
+.modal-body{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.modal-body .full{grid-column:1/-1}
+.modal-label{font-size:12px;color:#999;margin-bottom:5px;display:block;font-weight:500}
+.modal-input,.modal-select{width:100%;padding:9px 11px;border:1px solid #d8d8d4;border-radius:8px;font-size:14px;color:#1a1a18;background:#fff;font-family:inherit;outline:none}
+.modal-input:focus,.modal-select:focus{border-color:#888}
+.modal-footer{padding:13px 18px;border-top:1px solid #e8e8e4;display:flex;justify-content:flex-end;gap:8px}
+
+/* 配送モーダル */
+.shipping-modal-body{padding:18px}
+.shipping-type-select{display:flex;gap:10px;margin-bottom:16px}
+.type-opt{flex:1;border:1px solid #d8d8d4;border-radius:8px;padding:12px;text-align:center;cursor:pointer;font-size:13px;color:#888}
+.type-opt.selected{border-color:#1a1a18;background:#1a1a18;color:#fff}
+.type-opt:hover:not(.selected){background:#f5f5f2}
+.modal-pref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;max-height:260px;overflow-y:auto;border:1px solid #e8e8e4;border-radius:8px;padding:10px;margin-top:8px}
+
+/* CSV */
+.csv-note{font-size:13px;color:#888;margin-bottom:11px;line-height:1.7}
+.csv-format{background:#f5f5f2;border-radius:8px;padding:11px;font-size:11px;font-family:monospace;color:#888;margin-bottom:15px;word-break:break-all}
+.file-drop{border:1px dashed #d0d0cc;border-radius:10px;padding:24px;text-align:center;cursor:pointer;margin-bottom:13px}
+.file-drop:hover{background:#f5f5f2}
+.import-opt{display:flex;flex-direction:column;gap:9px;margin-bottom:9px}
+.import-opt label{display:flex;align-items:center;gap:7px;font-size:13px;color:#888;cursor:pointer}
+
+/* レスポンシブ */
+@media(max-width:600px){
+  .admin-toolbar{gap:6px}
+  .admin-search{width:100%}
+  .shipping-type-select{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div style="display:flex;align-items:center">
+    <span class="site-logo">ショップカワイ本店</span>
+    <span class="header-sub">管理画面</span>
+  </div>
+  <a href="index.html" class="back-link">← 注文サイトへ</a>
+</div>
+
+<div class="admin-tabs">
+  <div class="admin-tab active" onclick="showTab('products')" id="tab-products">商品管理</div>
+  <div class="admin-tab" onclick="showTab('shipping')" id="tab-shipping">配送方法</div>
+</div>
+
+<!-- ========== 商品管理タブ ========== -->
+<div class="tab-content active" id="content-products">
+  <div class="admin-header">
+    <span class="admin-title">商品一覧</span>
+    <div class="admin-btns">
+      <button class="btn" onclick="openCsvModal()">CSVインポート</button>
+      <button class="btn" onclick="exportCsv()">CSVエクスポート</button>
+      <button class="btn primary" onclick="openEditModal(null)">+ 商品を追加</button>
+    </div>
+  </div>
+  <div class="admin-toolbar">
+    <input class="admin-search" type="text" placeholder="タイトル・アーティスト・JAN検索" oninput="doAdminSearch(this.value)">
+    <select class="admin-select" onchange="doAdminFilterCat(this.value)">
+      <option value="">すべての種別</option>
+      <option>CD</option><option>DVD</option><option>レコード</option>
+    </select>
+    <select class="admin-select" onchange="doAdminFilterStatus(this.value)" style="font-size:12px">
+      <option value="">すべてのステータス</option>
+      <option>在庫あり:1～2営業日以内出荷</option>
+      <option>在庫あり:2～3営業日以内出荷</option>
+      <option>予約受付中:出荷日は商品タイトルに記載</option>
+      <option>当店在庫なし:取り寄せ可(3～5営業日以内出荷)</option>
+      <option>当店在庫なし:取り寄せ可(6～8営業日以内出荷)</option>
+      <option>当店在庫なし:入荷見込みなし</option>
+      <option>販売終了</option>
+      <option>非公開</option>
+    </select>
+    <span class="count-label" id="admin-count"></span>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="admin-tbl"><tbody id="admin-tbl-body"></tbody></table>
+  </div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- ========== 配送方法タブ ========== -->
+<div class="tab-content" id="content-shipping">
+  <div class="admin-header">
+    <span class="admin-title">配送方法の設定</span>
+    <button class="btn primary" onclick="openShippingModal(null)">+ 配送方法を追加</button>
+  </div>
+  <div class="shipping-wrap" id="shipping-list"></div>
+</div>
+
+<!-- ===== 商品編集モーダル ===== -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="edit-modal-title">商品を追加</span>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="full"><label class="modal-label">ステータス</label>
+        <select class="modal-select" id="f-status">
+          <option>在庫あり:1～2営業日以内出荷</option>
+          <option>在庫あり:2～3営業日以内出荷</option>
+          <option>予約受付中:出荷日は商品タイトルに記載</option>
+          <option>当店在庫なし:取り寄せ可(3～5営業日以内出荷)</option>
+          <option>当店在庫なし:取り寄せ可(6～8営業日以内出荷)</option>
+          <option>当店在庫なし:入荷見込みなし</option>
+          <option>販売終了</option>
+          <option>非公開</option>
+        </select>
+      </div>
+      <div class="full"><label class="modal-label">配送方法</label>
+        <select class="modal-select" id="f-shipping"></select>
+      </div>
+      <div><label class="modal-label">種別</label>
+        <select class="modal-select" id="f-cat"><option>CD</option><option>DVD</option><option>レコード</option></select>
+      </div>
+      <div><label class="modal-label">コンディション</label>
+        <select class="modal-select" id="f-cond"><option>新品</option><option>中古</option></select>
+      </div>
+      <div class="full"><label class="modal-label">タイトル</label><input class="modal-input" id="f-title" placeholder="タイトルを入力"></div>
+      <div class="full"><label class="modal-label">アーティスト</label><input class="modal-input" id="f-artist" placeholder="アーティスト名"></div>
+      <div><label class="modal-label">JANコード</label><input class="modal-input" id="f-jan" placeholder="4988031234567"></div>
+      <div><label class="modal-label">品番</label><input class="modal-input" id="f-num" placeholder="XXXX-0000"></div>
+      <div><label class="modal-label">発売日</label><input class="modal-input" type="date" id="f-date"></div>
+      <div><label class="modal-label">在庫数</label><input class="modal-input" type="number" id="f-stock" placeholder="0" min="0"></div>
+      <div class="full"><label class="modal-label">価格(税込)</label><input class="modal-input" type="number" id="f-price" placeholder="0" min="0"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeEditModal()">キャンセル</button>
+      <button class="btn primary" onclick="saveProduct()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CSVモーダル ===== -->
+<div class="modal-overlay" id="csv-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">CSVインポート</span>
+      <button class="modal-close" onclick="closeCsvModal()">✕</button>
+    </div>
+    <div style="padding:18px">
+      <div class="csv-note">
+        Googleスプレッドシートで「ファイル → ダウンロード → CSV(.csv)」で書き出したファイルを読み込めます。<br>
+        1行目はヘッダー行として扱われます。配送方法は配送方法名で照合します。
+      </div>
+      <div class="csv-format">ステータス,種別,タイトル,アーティスト,JANコード,品番,コンディション,発売日,在庫数,価格,配送方法名</div>
+      <div class="file-drop" onclick="document.getElementById('csv-file').click()">
+        <div style="font-size:14px;color:#888">クリックしてCSVファイルを選択</div>
+        <div style="font-size:12px;color:#bbb;margin-top:4px">または .csv ファイルをここにドロップ</div>
+        <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="readCsv(this)">
+      </div>
+      <div class="import-opt">
+        <label><input type="radio" name="import-mode" value="merge" checked> 既存データに追加・上書き（JANコードで照合）</label>
+        <label><input type="radio" name="import-mode" value="replace"> 全データを置き換える</label>
+      </div>
+      <div id="csv-preview" style="font-size:13px;color:#888;margin-top:9px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeCsvModal()">キャンセル</button>
+      <button class="btn primary" id="import-btn" onclick="doImport()" style="display:none">インポート実行</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 配送方法モーダル ===== -->
+<div class="modal-overlay" id="shipping-modal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <span class="modal-title" id="shipping-modal-title">配送方法を追加</span>
+      <button class="modal-close" onclick="closeShippingModal()">✕</button>
+    </div>
+    <div class="shipping-modal-body">
+      <div style="margin-bottom:13px">
+        <label class="modal-label">配送方法名</label>
+        <input class="modal-input" id="s-name" placeholder="例：メール便、ゆうパック など">
+      </div>
+      <div style="margin-bottom:13px">
+        <label class="modal-label">料金タイプ</label>
+        <div class="shipping-type-select">
+          <div class="type-opt selected" onclick="selectType('flat',this)" id="type-flat">全国一律</div>
+          <div class="type-opt" onclick="selectType('pref',this)" id="type-pref">都道府県別</div>
+          <div class="type-opt" onclick="selectType('free',this)" id="type-free">送料無料</div>
+        </div>
+      </div>
+      <!-- 全国一律 -->
+      <div id="flat-area">
+        <label class="modal-label">送料（円）</label>
+        <input class="modal-input" type="number" id="s-flat-fee" placeholder="200" min="0" style="width:160px">
+      </div>
+      <!-- 都道府県別 -->
+      <div id="pref-area" style="display:none">
+        <label class="modal-label">都道府県別送料（円）</label>
+        <div class="modal-pref-grid" id="pref-fee-grid"></div>
+      </div>
+      <!-- 送料無料は入力不要 -->
+      <div id="free-area" style="display:none">
+        <div style="background:#e1f5ee;border-radius:8px;padding:12px;font-size:13px;color:#085041">送料無料として設定されます。</div>
+      </div>
+      <div style="margin-top:16px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="s-default" style="width:16px;height:16px">
+        <label for="s-default" style="font-size:14px;color:#555;cursor:pointer">この配送方法をデフォルトに設定する</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeShippingModal()">キャンセル</button>
+      <button class="btn primary" onclick="saveShipping()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 設定
+// ============================================================
+const STATUS_CLASS = {
+  '在庫あり:1～2営業日以内出荷':               's-in1',
+  '在庫あり:2～3営業日以内出荷':               's-in2',
+  '予約受付中:出荷日は商品タイトルに記載':       's-rsv',
+  '当店在庫なし:取り寄せ可(3～5営業日以内出荷)': 's-ord1',
+  '当店在庫なし:取り寄せ可(6～8営業日以内出荷)': 's-ord2',
+  '当店在庫なし:入荷見込みなし':               's-noin',
+  '販売終了': 's-end',
+  '非公開':   's-hid',
+};
+
+const PREFS = ['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'];
+
+// ============================================================
+// localStorage
+// ============================================================
+function loadProducts() {
+  try { const d = localStorage.getItem('skProducts'); return d ? JSON.parse(d) : getDefaultProducts(); }
+  catch(e) { return getDefaultProducts(); }
+}
+function saveProducts() {
+  localStorage.setItem('skProducts', JSON.stringify(products));
+}
+function loadShippingMethods() {
+  try { const d = localStorage.getItem('skShipping'); return d ? JSON.parse(d) : getDefaultShipping(); }
+  catch(e) { return getDefaultShipping(); }
+}
+function saveShippingMethods() {
+  localStorage.setItem('skShipping', JSON.stringify(shippingMethods));
+}
+
+function getDefaultProducts() {
+  return [
+    {id:1,status:'在庫あり:1～2営業日以内出荷',cat:'レコード',title:'Abbey Road',artist:'The Beatles',jan:'4988031234567',num:'APCL-1234',cond:'中古',date:'1969-09-26',stock:3,price:2800,shippingId:1},
+    {id:2,status:'在庫あり:2～3営業日以内出荷',cat:'レコード',title:'Kind of Blue',artist:'Miles Davis',jan:'4988031234568',num:'SICP-5678',cond:'中古',date:'1959-08-17',stock:1,price:3200,shippingId:1},
+    {id:3,status:'予約受付中:出荷日は商品タイトルに記載',cat:'CD',title:'Thriller (2025年6月発売)',artist:'Michael Jackson',jan:'4988031234569',num:'EICP-9012',cond:'新品',date:'2025-06-01',stock:0,price:1800,shippingId:2},
+    {id:4,status:'当店在庫なし:取り寄せ可(3～5営業日以内出荷)',cat:'CD',title:'Back in Black',artist:'AC/DC',jan:'4988031234570',num:'MHCP-3456',cond:'新品',date:'1980-07-25',stock:0,price:1500,shippingId:2},
+    {id:5,status:'当店在庫なし:取り寄せ可(6～8営業日以内出荷)',cat:'DVD',title:'Live at Budokan',artist:'山下達郎',jan:'4988031234571',num:'MOON-7890',cond:'新品',date:'2024-12-01',stock:0,price:4500,shippingId:3},
+    {id:6,status:'当店在庫なし:入荷見込みなし',cat:'レコード',title:'Purple Rain',artist:'Prince',jan:'4988031234572',num:'WPCR-1234',cond:'中古',date:'1984-06-25',stock:2,price:2200,shippingId:1},
+    {id:7,status:'販売終了',cat:'DVD',title:'First Love',artist:'宇多田ヒカル',jan:'4988031234573',num:'TOCT-5678',cond:'新品',date:'1999-03-10',stock:5,price:3800,shippingId:2},
+    {id:8,status:'非公開',cat:'レコード',title:'The Dark Side of the Moon',artist:'Pink Floyd',jan:'4988031234574',num:'PHJR-9012',cond:'中古',date:'1973-03-01',stock:2,price:3500,shippingId:1},
+  ];
+}
+
+function getDefaultShipping() {
+  return [
+    {id:1,name:'メール便',type:'flat',flatFee:200,isDefault:true},
+    {id:2,name:'宅配便',type:'pref',prefFees:{'北海道':1500,'青森県':1200,'岩手県':1200,'宮城県':1200,'秋田県':1200,'山形県':1200,'福島県':1100,'茨城県':800,'栃木県':800,'群馬県':800,'埼玉県':800,'千葉県':800,'東京都':800,'神奈川県':800,'新潟県':900,'富山県':900,'石川県':900,'福井県':900,'山梨県':900,'長野県':900,'岐阜県':900,'静岡県':900,'愛知県':900,'三重県':900,'滋賀県':1000,'京都府':1000,'大阪府':1000,'兵庫県':1000,'奈良県':1000,'和歌山県':1000,'鳥取県':1100,'島根県':1100,'岡山県':1100,'広島県':1100,'山口県':1100,'徳島県':1200,'香川県':1200,'愛媛県':1200,'高知県':1200,'福岡県':1200,'佐賀県':1200,'長崎県':1200,'熊本県':1200,'大分県':1200,'宮崎県':1200,'鹿児島県':1200,'沖縄県':1800},isDefault:false},
+    {id:3,name:'送料無料',type:'free',flatFee:0,isDefault:false},
+  ];
+}
+
+let products = loadProducts();
+let shippingMethods = loadShippingMethods();
+let nextProductId = products.length ? Math.max(...products.map(p=>p.id)) + 1 : 1;
+let nextShippingId = shippingMethods.length ? Math.max(...shippingMethods.map(s=>s.id)) + 1 : 1;
+
+// ============================================================
+// タブ切替
+// ============================================================
+function showTab(name) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('content-' + name).classList.add('active');
+  if (name === 'shipping') renderShipping();
+}
+
+// ============================================================
+// 商品管理
+// ============================================================
+let adminSearch = '', adminFilterCat = '', adminFilterStatus = '';
+let curPage = 1;
+const PER_PAGE = 20;
+let editingId = null, csvRows = [];
+
+function adminFiltered() {
+  return products.filter(p => {
+    const s = adminSearch.toLowerCase();
+    const ms = s === '' || p.title.toLowerCase().includes(s) || p.artist.toLowerCase().includes(s) || p.jan.includes(s) || p.num.toLowerCase().includes(s);
+    return ms && (adminFilterCat === '' || p.cat === adminFilterCat) && (adminFilterStatus === '' || p.status === adminFilterStatus);
+  });
+}
+
+function doAdminSearch(v)       { adminSearch = v;       curPage = 1; renderAdmin(); }
+function doAdminFilterCat(v)    { adminFilterCat = v;    curPage = 1; renderAdmin(); }
+function doAdminFilterStatus(v) { adminFilterStatus = v; curPage = 1; renderAdmin(); }
+
+function getShippingName(id) {
+  const s = shippingMethods.find(x => x.id === id);
+  return s ? s.name : '—';
+}
+
+function renderAdmin() {
+  const list  = adminFiltered();
+  const total = list.length;
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (curPage > pages) curPage = 1;
+  const slice = list.slice((curPage - 1) * PER_PAGE, curPage * PER_PAGE);
+  document.getElementById('admin-count').textContent = total + '件';
+
+  const tbody = document.getElementById('admin-tbl-body');
+  if (!slice.length) {
+    tbody.innerHTML = '<tr><td style="text-align:center;padding:36px;color:#bbb">該当商品なし</td></tr>';
+    renderPagination(0, 1); return;
+  }
+  tbody.innerHTML = slice.map(p => {
+    const hidden = p.status === '非公開';
+    return `
+      <tr class="r1${hidden ? ' hidden-row' : ''}">
+        <td class="title-cell">
+          <span class="status-badge ${STATUS_CLASS[p.status] || 's-hid'}" style="margin-right:6px">${p.status}</span>
+          <span style="font-weight:500">${p.title}</span> <span style="font-size:12px;color:#aaa;font-weight:400">${p.artist}</span>
+        </td>
+        <td class="admin-price-col">¥${p.price.toLocaleString()}</td>
+        <td class="admin-action-col">
+          <button class="act-btn" onclick="openEditModal(${p.id})">編集</button>
+          <button class="act-btn del" onclick="deleteProduct(${p.id})">削除</button>
+        </td>
+      </tr>
+      <tr class="r2${hidden ? ' hidden-row' : ''}">
+        <td class="meta-cell" colspan="3">
+          <span class="cat-badge">${p.cat}</span><span class="cond-badge">${p.cond}</span>
+          ${p.jan}　${p.num}　在庫:${p.stock}　${p.date || ''}　配送:${getShippingName(p.shippingId)}
+        </td>
+      </tr>`;
+  }).join('');
+  renderPagination(total, pages);
+}
+
+function renderPagination(total, pages) {
+  const el = document.getElementById('pagination');
+  if (pages <= 1) { el.innerHTML = ''; return; }
+  let h = '';
+  for (let i = 1; i <= pages; i++) h += `<button class="page-btn${i === curPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  h += `<span class="page-info">${curPage} / ${pages} ページ</span>`;
+  el.innerHTML = h;
+}
+
+function goPage(p) { curPage = p; renderAdmin(); }
+
+function buildShippingSelect(selectedId) {
+  const sel = document.getElementById('f-shipping');
+  const defaultS = shippingMethods.find(s => s.isDefault);
+  sel.innerHTML = shippingMethods.map(s =>
+    `<option value="${s.id}"${s.id === selectedId ? ' selected' : ''}>${s.name}${s.isDefault ? '（デフォルト）' : ''}</option>`
+  ).join('');
+  if (!selectedId && defaultS) sel.value = defaultS.id;
+}
+
+function openEditModal(id) {
+  editingId = id;
+  document.getElementById('edit-modal-title').textContent = id ? '商品を編集' : '商品を追加';
+  if (id) {
+    const p = products.find(x => x.id === id);
+    document.getElementById('f-status').value = p.status;
+    document.getElementById('f-cat').value    = p.cat;
+    document.getElementById('f-cond').value   = p.cond;
+    document.getElementById('f-title').value  = p.title;
+    document.getElementById('f-artist').value = p.artist;
+    document.getElementById('f-jan').value    = p.jan;
+    document.getElementById('f-num').value    = p.num;
+    document.getElementById('f-date').value   = p.date || '';
+    document.getElementById('f-stock').value  = p.stock;
+    document.getElementById('f-price').value  = p.price;
+    buildShippingSelect(p.shippingId);
+  } else {
+    ['f-title','f-artist','f-jan','f-num','f-date','f-stock','f-price'].forEach(x => document.getElementById(x).value = '');
+    document.getElementById('f-status').value = '在庫あり:1～2営業日以内出荷';
+    document.getElementById('f-cat').value    = 'CD';
+    document.getElementById('f-cond').value   = '新品';
+    buildShippingSelect(null);
+  }
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal() { document.getElementById('edit-modal').classList.remove('open'); }
+
+function saveProduct() {
+  const p = {
+    status:     document.getElementById('f-status').value,
+    cat:        document.getElementById('f-cat').value,
+    cond:       document.getElementById('f-cond').value,
+    title:      document.getElementById('f-title').value.trim(),
+    artist:     document.getElementById('f-artist').value.trim(),
+    jan:        document.getElementById('f-jan').value.trim(),
+    num:        document.getElementById('f-num').value.trim(),
+    date:       document.getElementById('f-date').value,
+    stock:      parseInt(document.getElementById('f-stock').value) || 0,
+    price:      parseInt(document.getElementById('f-price').value) || 0,
+    shippingId: parseInt(document.getElementById('f-shipping').value) || shippingMethods.find(s=>s.isDefault)?.id || 1,
+  };
+  if (!p.title) { alert('タイトルを入力してください'); return; }
+  if (editingId) {
+    const idx = products.findIndex(x => x.id === editingId);
+    products[idx] = { ...products[idx], ...p };
+  } else {
+    products.unshift({ id: nextProductId++, ...p });
+  }
+  saveProducts();
+  closeEditModal();
+  renderAdmin();
+}
+
+function deleteProduct(id) {
+  if (!confirm('この商品を削除しますか？')) return;
+  products = products.filter(x => x.id !== id);
+  saveProducts();
+  renderAdmin();
+}
+
+// ============================================================
+// CSV
+// ============================================================
+function openCsvModal() {
+  csvRows = [];
+  document.getElementById('csv-preview').textContent = '';
+  document.getElementById('import-btn').style.display = 'none';
+  document.getElementById('csv-file').value = '';
+  document.getElementById('csv-modal').classList.add('open');
+}
+function closeCsvModal() { document.getElementById('csv-modal').classList.remove('open'); }
+
+function readCsv(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split(/\r?\n/).filter(l => l.trim());
+    csvRows = lines.slice(1).map(line => {
+      const c = line.split(',');
+      const shippingName = (c[10] || '').trim();
+      const sm = shippingMethods.find(s => s.name === shippingName);
+      const defaultSm = shippingMethods.find(s => s.isDefault) || shippingMethods[0];
+      return {
+        status:     c[0] || '在庫あり:1～2営業日以内出荷',
+        cat:        c[1] || 'CD',
+        title:      c[2] || '',
+        artist:     c[3] || '',
+        jan:        c[4] || '',
+        num:        c[5] || '',
+        cond:       c[6] || '新品',
+        date:       c[7] || '',
+        stock:      parseInt(c[8]) || 0,
+        price:      parseInt(c[9]) || 0,
+        shippingId: sm ? sm.id : defaultSm.id,
+      };
+    }).filter(r => r.title);
+    document.getElementById('csv-preview').textContent = csvRows.length + '件のデータを読み込みました';
+    document.getElementById('import-btn').style.display = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function doImport() {
+  const mode = document.querySelector('input[name="import-mode"]:checked').value;
+  if (mode === 'replace') {
+    products = csvRows.map((r, i) => ({ id: nextProductId + i, ...r }));
+    nextProductId += csvRows.length;
+  } else {
+    csvRows.forEach(r => {
+      const idx = products.findIndex(p => p.jan && p.jan === r.jan);
+      if (idx >= 0) products[idx] = { ...products[idx], ...r };
+      else products.unshift({ id: nextProductId++, ...r });
+    });
+  }
+  saveProducts();
+  closeCsvModal();
+  renderAdmin();
+  alert(csvRows.length + '件をインポートしました');
+}
+
+function exportCsv() {
+  const header = 'ステータス,種別,タイトル,アーティスト,JANコード,品番,コンディション,発売日,在庫数,価格,配送方法名';
+  const rows = products.map(p => {
+    const sname = getShippingName(p.shippingId);
+    return [p.status,p.cat,p.title,p.artist,p.jan,p.num,p.cond,p.date||'',p.stock,p.price,sname].join(',');
+  });
+  const blob = new Blob(['\uFEFF' + header + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'products.csv'; a.click();
+}
+
+// ============================================================
+// 配送方法管理
+// ============================================================
+let editingShippingId = null;
+let currentType = 'flat';
+
+function renderShipping() {
+  const el = document.getElementById('shipping-list');
+  if (!shippingMethods.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:#bbb;font-size:14px">配送方法が登録されていません</div>';
+    return;
+  }
+  el.innerHTML = shippingMethods.map(s => {
+    const typeLabel = { flat:'全国一律', pref:'都道府県別', free:'送料無料' }[s.type] || s.type;
+    let bodyHtml = '';
+    if (s.type === 'flat') bodyHtml = `全国一律 ¥${s.flatFee.toLocaleString()}`;
+    else if (s.type === 'free') bodyHtml = '送料無料';
+    else if (s.type === 'pref') {
+      const fees = Object.entries(s.prefFees).map(([k,v]) => `${k}:¥${v.toLocaleString()}`).join('　');
+      bodyHtml = `<div style="margin-top:4px;line-height:1.8;font-size:12px">${fees}</div>`;
+    }
+    return `
+      <div class="shipping-card">
+        <div class="shipping-card-header">
+          <span class="shipping-card-title">${s.name}</span>
+          <span class="shipping-type-badge ${s.type}">${typeLabel}</span>
+          ${s.isDefault ? '<span class="default-badge">デフォルト</span>' : ''}
+          <button class="btn sm" style="margin-left:8px" onclick="openShippingModal(${s.id})">編集</button>
+          <button class="btn sm danger" onclick="deleteShipping(${s.id})">削除</button>
+        </div>
+        <div class="shipping-card-body">${bodyHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function selectType(type, el) {
+  currentType = type;
+  document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('flat-area').style.display = type === 'flat' ? 'block' : 'none';
+  document.getElementById('pref-area').style.display = type === 'pref' ? 'block' : 'none';
+  document.getElementById('free-area').style.display = type === 'free' ? 'block' : 'none';
+}
+
+function buildPrefGrid(existingFees) {
+  const grid = document.getElementById('pref-fee-grid');
+  grid.innerHTML = PREFS.map(pref => `
+    <div class="pref-row">
+      <span class="pref-name">${pref}</span>
+      <input class="pref-input" type="number" min="0" data-pref="${pref}" value="${existingFees && existingFees[pref] !== undefined ? existingFees[pref] : ''}">
+    </div>`).join('');
+}
+
+function openShippingModal(id) {
+  editingShippingId = id;
+  document.getElementById('shipping-modal-title').textContent = id ? '配送方法を編集' : '配送方法を追加';
+
+  if (id) {
+    const s = shippingMethods.find(x => x.id === id);
+    document.getElementById('s-name').value = s.name;
+    document.getElementById('s-default').checked = s.isDefault;
+    selectType(s.type, document.getElementById('type-' + s.type));
+    if (s.type === 'flat') document.getElementById('s-flat-fee').value = s.flatFee;
+    if (s.type === 'pref') buildPrefGrid(s.prefFees);
+    else buildPrefGrid({});
+  } else {
+    document.getElementById('s-name').value = '';
+    document.getElementById('s-default').checked = false;
+    document.getElementById('s-flat-fee').value = '';
+    selectType('flat', document.getElementById('type-flat'));
+    buildPrefGrid({});
+  }
+  document.getElementById('shipping-modal').classList.add('open');
+}
+
+function closeShippingModal() { document.getElementById('shipping-modal').classList.remove('open'); }
+
+function saveShipping() {
+  const name = document.getElementById('s-name').value.trim();
+  if (!name) { alert('配送方法名を入力してください'); return; }
+  const isDefault = document.getElementById('s-default').checked;
+
+  let obj = { name, type: currentType, isDefault };
+
+  if (currentType === 'flat') {
+    obj.flatFee = parseInt(document.getElementById('s-flat-fee').value) || 0;
+  } else if (currentType === 'pref') {
+    const fees = {};
+    document.querySelectorAll('#pref-fee-grid .pref-input').forEach(inp => {
+      const v = parseInt(inp.value);
+      if (!isNaN(v)) fees[inp.dataset.pref] = v;
+    });
+    obj.prefFees = fees;
+  } else if (currentType === 'free') {
+    obj.flatFee = 0;
+  }
+
+  if (isDefault) shippingMethods.forEach(s => s.isDefault = false);
+
+  if (editingShippingId) {
+    const idx = shippingMethods.findIndex(x => x.id === editingShippingId);
+    shippingMethods[idx] = { ...shippingMethods[idx], ...obj };
+  } else {
+    shippingMethods.push({ id: nextShippingId++, ...obj });
+  }
+
+  saveShippingMethods();
+  closeShippingModal();
+  renderShipping();
+  renderAdmin();
+}
+
+function deleteShipping(id) {
+  if (shippingMethods.length <= 1) { alert('配送方法は最低1つ必要です'); return; }
+  if (!confirm('この配送方法を削除しますか？\nこの配送方法が設定されている商品はデフォルトに変更されます。')) return;
+  shippingMethods = shippingMethods.filter(x => x.id !== id);
+  const def = shippingMethods.find(s => s.isDefault) || shippingMethods[0];
+  if (!shippingMethods.find(s => s.isDefault)) def.isDefault = true;
+  products.forEach(p => { if (p.shippingId === id) p.shippingId = def.id; });
+  saveProducts();
+  saveShippingMethods();
+  renderShipping();
+  renderAdmin();
+}
+
+// ============================================================
+// 初期描画
+// ============================================================
+renderAdmin();
+</script>
+</body>
+</html>
