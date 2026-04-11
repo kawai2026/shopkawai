@@ -7,327 +7,464 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f9f9f7;color:#1a1a18;font-size:14px}
-a{color:inherit;text-decoration:none}
 
-/* Header */
-.header{background:#fff;border-bottom:1px solid #e8e8e4;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-size:16px;font-weight:600;letter-spacing:.02em}
-.cart-btn{background:transparent;border:1px solid #d0d0cc;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;color:#1a1a18;display:flex;align-items:center;gap:6px}
+/* ========== 共通 ========== */
+.btn{padding:6px 14px;border:1px solid #d0d0cc;border-radius:8px;font-size:12px;cursor:pointer;background:#fff;color:#1a1a18}
+.btn:hover{background:#f3f3f0}
+.btn.primary{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.btn.primary:hover{opacity:.85}
+.status-badge{font-size:10px;padding:2px 7px;border-radius:10px;white-space:nowrap;display:inline-block;line-height:1.5}
+.cat-badge{font-size:10px;padding:2px 6px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
+.cond-badge{font-size:10px;padding:2px 6px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
+.s-in1{background:#e1f5ee;color:#085041}
+.s-in2{background:#d4f0e6;color:#0f6e56}
+.s-rsv{background:#e6f1fb;color:#0c447c}
+.s-ord1{background:#faeeda;color:#633806}
+.s-ord2{background:#f5e4c8;color:#854f0b}
+.s-noin{background:#f0f0ec;color:#999}
+.s-end{background:#fdecea;color:#c0392b}
+.s-hid{background:#f0f0ec;color:#999;font-style:italic}
+
+/* ========== ヘッダー ========== */
+.site-header{background:#fff;border-bottom:1px solid #e8e8e4;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.site-logo{font-size:16px;font-weight:600;letter-spacing:.02em;cursor:pointer}
+.header-right{display:flex;align-items:center;gap:10px}
+.admin-link{font-size:12px;color:#999;cursor:pointer;padding:4px 10px;border:1px solid #e0e0dc;border-radius:6px}
+.admin-link:hover{background:#f3f3f0;color:#555}
+.cart-btn{background:#fff;border:1px solid #d0d0cc;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;color:#1a1a18;display:flex;align-items:center;gap:6px}
 .cart-btn:hover{background:#f3f3f0}
 .cart-badge{background:#e24b4a;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
 
-/* Tabs */
-.tabs{background:#fff;border-bottom:1px solid #e8e8e4;display:flex;padding:0 20px}
-.tab{padding:10px 18px;font-size:13px;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
-.tab.active{color:#1a1a18;border-bottom-color:#1a1a18;font-weight:500}
-.tab:hover{color:#444}
-
-/* Page */
-.page{display:none;padding:20px;max-width:960px;margin:0 auto}
+/* ========== ページ切替 ========== */
+.page{display:none}
 .page.active{display:block}
 
-/* Search & Filter */
-.search-bar{width:100%;padding:9px 14px;border:1px solid #d8d8d4;border-radius:8px;font-size:14px;color:#1a1a18;background:#fff;margin-bottom:12px;outline:none}
+/* ========== 注文サイト ========== */
+.shop-tabs{background:#fff;border-bottom:1px solid #e8e8e4;display:flex;padding:0 20px}
+.shop-tab{padding:10px 16px;font-size:13px;cursor:pointer;color:#999;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.shop-tab.active{color:#1a1a18;border-bottom-color:#1a1a18;font-weight:500}
+.shop-tab-content{display:none;padding:16px 20px;max-width:900px;margin:0 auto}
+.shop-tab-content.active{display:block}
+
+.search-bar{width:100%;padding:9px 14px;border:1px solid #d8d8d4;border-radius:8px;font-size:14px;color:#1a1a18;background:#fff;margin-bottom:10px;outline:none}
 .search-bar:focus{border-color:#888}
 .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.filter-btn{padding:5px 14px;border:1px solid #d8d8d4;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#666;transition:all .15s}
+.filter-btn{padding:5px 14px;border:1px solid #d8d8d4;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#666}
 .filter-btn.active{background:#1a1a18;color:#fff;border-color:#1a1a18}
 
-/* PC Table */
-.table-wrap{overflow-x:auto}
-.product-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;min-width:733px}
-.product-table th{text-align:left;padding:7px 8px;font-weight:500;color:#888;border-bottom:1px solid #e8e8e4;font-size:11px;white-space:nowrap;background:#fafaf8}
-.product-table td{padding:9px 8px;border-bottom:1px solid #f0f0ec;color:#1a1a18;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.product-table tbody tr:hover td{background:#f5f5f2}
-.col-cat{width:70px}
-.col-title{width:220px}
-.col-artist{width:100px}
-.col-jan{width:110px}
-.col-num{width:85px}
-.col-price{width:88px}
-.col-btn{width:60px}
-
-/* SP 2-row table */
-.sp-table{width:100%;border-collapse:collapse;font-size:13px}
-.sp-table .r1 td{padding:9px 6px 3px;border-top:1px solid #f0f0ec;vertical-align:bottom}
-.sp-table .r2 td{padding:2px 6px 9px;vertical-align:top}
-.sp-table .r1:first-child td{border-top:none}
-.sp-table .t1{font-weight:500;color:#1a1a18;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sp-table .t2{color:#888;font-size:11px}
-.sp-table .price-cell{text-align:right;vertical-align:middle;padding:9px 0 9px 8px;font-weight:500;white-space:nowrap}
-.sp-table .meta{color:#aaa;font-size:11px}
-
-/* Cat badge */
-.cat-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:#f0f0ec;color:#666;white-space:nowrap;display:inline-block}
-
-/* Buttons */
-.add-btn{padding:5px 12px;border:1px solid #d0d0cc;border-radius:7px;font-size:12px;cursor:pointer;background:#fff;color:#1a1a18;white-space:nowrap;transition:background .15s}
+/* 2行テーブル（注文サイト） */
+.shop-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.shop-tbl .r1 td{padding:10px 8px 3px;border-top:1px solid #d0d0cc;vertical-align:middle}
+.shop-tbl .r2 td{padding:2px 8px 10px;vertical-align:top}
+.shop-tbl .r1:first-child td{border-top:none}
+.shop-tbl tr:hover td{background:#f8f8f6}
+.shop-tbl .t1{font-weight:500;color:#1a1a18}
+.shop-tbl .meta{font-size:11px;color:#aaa}
+.price-col{text-align:right;white-space:nowrap;font-weight:500;width:96px;vertical-align:middle;padding:10px 8px 3px}
+.btn-col{text-align:right;white-space:nowrap;width:80px;vertical-align:middle;padding:10px 8px 3px}
+.add-btn{padding:5px 12px;border:1px solid #d0d0cc;border-radius:7px;font-size:12px;cursor:pointer;background:#fff;color:#1a1a18}
 .add-btn:hover{background:#f3f3f0}
-.add-btn-sm{padding:4px 10px;border:1px solid #d0d0cc;border-radius:7px;font-size:11px;cursor:pointer;background:#fff;color:#1a1a18;margin-top:4px;display:block}
+.no-order-label{font-size:11px;color:#bbb}
 
-/* Cart */
+/* カート */
 .cart-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .cart-item{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
 .cart-info{flex:1;min-width:0}
 .cart-name{font-size:13px;font-weight:500;margin-bottom:2px}
-.cart-sub{font-size:11px;color:#888;margin-bottom:3px}
-.cart-price-line{font-size:12px;color:#888}
+.cart-sub{font-size:11px;color:#999;margin-bottom:3px}
+.cart-price-line{font-size:12px;color:#999}
 .qty-ctrl{display:flex;align-items:center;gap:8px}
-.qty-btn{width:24px;height:24px;border:1px solid #d0d0cc;border-radius:6px;background:#fff;cursor:pointer;font-size:15px;color:#1a1a18;display:flex;align-items:center;justify-content:center;line-height:1}
+.qty-btn{width:26px;height:26px;border:1px solid #d0d0cc;border-radius:6px;background:#fff;cursor:pointer;font-size:16px;color:#1a1a18;display:flex;align-items:center;justify-content:center}
 .qty-btn:hover{background:#f3f3f0}
 .qty-num{font-size:13px;min-width:20px;text-align:center}
 .remove-btn{background:transparent;border:none;color:#ccc;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
-.remove-btn:hover{color:#888}
-
-/* Total */
-.total-box{background:#f5f5f2;border-radius:12px;padding:14px;margin-bottom:16px}
-.total-row{display:flex;justify-content:space-between;font-size:13px;color:#888;margin-bottom:5px}
+.remove-btn:hover{color:#999}
+.total-box{background:#f5f5f2;border-radius:12px;padding:14px;margin-bottom:14px}
+.total-row{display:flex;justify-content:space-between;font-size:13px;color:#999;margin-bottom:5px}
 .total-main{display:flex;justify-content:space-between;font-size:15px;font-weight:600;color:#1a1a18;padding-top:10px;border-top:1px solid #e0e0dc;margin-top:4px}
-.proceed-btn{width:100%;padding:12px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.proceed-btn{width:100%;padding:12px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer}
 .proceed-btn:hover{opacity:.85}
+.empty-cart{text-align:center;padding:40px;color:#bbb;font-size:13px}
 
-/* Order form */
+/* 注文フォーム */
 .form-section{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:16px;margin-bottom:14px}
 .section-title{font-size:14px;font-weight:600;color:#1a1a18;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #f0f0ec}
 .form-group{margin-bottom:12px}
-.form-label{font-size:11px;color:#888;margin-bottom:4px;display:block;font-weight:500;letter-spacing:.03em}
+.form-label{font-size:11px;color:#999;margin-bottom:4px;display:block;font-weight:500;letter-spacing:.03em}
 .form-input{width:100%;padding:9px 12px;border:1px solid #d8d8d4;border-radius:8px;font-size:13px;color:#1a1a18;background:#fff;outline:none;font-family:inherit}
 .form-input:focus{border-color:#888}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .bank-box{background:#f5f5f2;border-radius:10px;padding:14px}
-.bank-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;color:#888;border-bottom:1px solid #ebebeb}
+.bank-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;color:#999;border-bottom:1px solid #ebebeb}
 .bank-row:last-of-type{border-bottom:none}
 .bank-val{color:#1a1a18;font-weight:500}
-.bank-note{margin-top:10px;font-size:11px;color:#aaa}
-.submit-btn{width:100%;padding:14px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px;transition:opacity .15s}
+.bank-note{margin-top:10px;font-size:11px;color:#bbb}
+.submit-btn{width:100%;padding:14px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px}
 .submit-btn:hover{opacity:.85}
-
-/* Order summary */
 .order-summary-box{background:#f5f5f2;border-radius:12px;padding:14px;margin-bottom:6px}
 .order-summary-title{font-weight:600;font-size:13px;color:#1a1a18;margin-bottom:8px}
-.order-item-row{display:flex;justify-content:space-between;font-size:12px;color:#888;padding:3px 0}
+.order-item-row{display:flex;justify-content:space-between;font-size:12px;color:#999;padding:3px 0}
 .order-total-row{display:flex;justify-content:space-between;font-weight:600;font-size:13px;color:#1a1a18;padding-top:8px;margin-top:4px;border-top:1px solid #e0e0dc}
 
-/* Empty state */
-.empty{text-align:center;padding:40px 20px;color:#aaa;font-size:13px}
+/* ========== 管理画面 ========== */
+.admin-header{padding:12px 20px;border-bottom:1px solid #e8e8e4;background:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.admin-title{font-size:15px;font-weight:600;color:#1a1a18}
+.admin-btns{display:flex;gap:8px;flex-wrap:wrap}
+.admin-toolbar{padding:10px 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e8e8e4;background:#fafaf8}
+.admin-search{padding:7px 12px;border:1px solid #d8d8d4;border-radius:8px;font-size:12px;color:#1a1a18;background:#fff;width:200px;outline:none}
+.admin-search:focus{border-color:#888}
+.admin-select{padding:7px 10px;border:1px solid #d8d8d4;border-radius:8px;font-size:12px;color:#1a1a18;background:#fff;max-width:190px}
+.count-label{font-size:12px;color:#999;margin-left:auto}
 
-/* Responsive */
-@media(max-width:640px){
-  .pc-only{display:none}
-  .sp-only{display:block}
-  .page{padding:14px}
-  .product-table{min-width:unset}
+/* 2行テーブル（管理画面） */
+.admin-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.admin-tbl .r1 td{padding:10px 20px 3px;border-top:1px solid #d0d0cc;vertical-align:middle}
+.admin-tbl .r2 td{padding:2px 20px 10px;vertical-align:top}
+.admin-tbl .r1:first-child td{border-top:none}
+.admin-tbl tr:hover td{background:#f8f8f6}
+.admin-tbl .hidden-row td{opacity:.4}
+.title-cell{font-weight:500;color:#1a1a18;min-width:0}
+.meta-cell{font-size:11px;color:#aaa}
+.admin-price-col{text-align:right;white-space:nowrap;font-weight:500;width:96px;vertical-align:middle;padding:10px 20px 3px}
+.admin-action-col{text-align:right;white-space:nowrap;width:96px;vertical-align:middle;padding:10px 20px 3px}
+.act-btn{padding:4px 10px;border:1px solid #d8d8d4;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#1a1a18;margin-left:4px}
+.act-btn:hover{background:#f3f3f0}
+.act-btn.del{color:#c0392b;border-color:#f5c0bb}
+.act-btn.del:hover{background:#fdf0ee}
+
+/* ページネーション */
+.pagination{padding:12px 20px;display:flex;align-items:center;gap:6px;border-top:1px solid #e8e8e4;flex-wrap:wrap;background:#fafaf8}
+.page-btn{padding:5px 12px;border:1px solid #d8d8d4;border-radius:7px;font-size:12px;cursor:pointer;background:#fff;color:#1a1a18}
+.page-btn:hover{background:#f3f3f0}
+.page-btn.active{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.page-info{font-size:12px;color:#999;margin-left:auto}
+
+/* ========== モーダル ========== */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:1px solid #e8e8e4;width:100%;max-width:560px;overflow:hidden}
+.modal-header{padding:14px 18px;border-bottom:1px solid #e8e8e4;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:14px;font-weight:600;color:#1a1a18}
+.modal-close{background:transparent;border:none;font-size:20px;cursor:pointer;color:#ccc;line-height:1}
+.modal-close:hover{color:#999}
+.modal-body{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-body .full{grid-column:1/-1}
+.modal-label{font-size:11px;color:#999;margin-bottom:4px;display:block;font-weight:500}
+.modal-input,.modal-select{width:100%;padding:8px 10px;border:1px solid #d8d8d4;border-radius:8px;font-size:13px;color:#1a1a18;background:#fff;font-family:inherit;outline:none}
+.modal-input:focus,.modal-select:focus{border-color:#888}
+.modal-footer{padding:12px 18px;border-top:1px solid #e8e8e4;display:flex;justify-content:flex-end;gap:8px}
+
+/* CSV */
+.csv-note{font-size:12px;color:#888;margin-bottom:10px;line-height:1.7}
+.csv-format{background:#f5f5f2;border-radius:8px;padding:10px;font-size:10px;font-family:monospace;color:#888;margin-bottom:14px;word-break:break-all}
+.file-drop{border:1px dashed #d0d0cc;border-radius:10px;padding:22px;text-align:center;cursor:pointer;margin-bottom:12px}
+.file-drop:hover{background:#f5f5f2}
+.import-opt{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.import-opt label{display:flex;align-items:center;gap:6px;font-size:12px;color:#888;cursor:pointer}
+
+/* ========== レスポンシブ ========== */
+@media(max-width:600px){
   .form-row{grid-template-columns:1fr}
-}
-@media(min-width:641px){
-  .sp-only{display:none}
-  .pc-only{display:block}
+  .admin-toolbar{gap:6px}
+  .admin-search{width:100%}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <span class="logo">Record Shop</span>
-  <button class="cart-btn" onclick="switchTab('cart')">
-    カート <span class="cart-badge" id="badge">0</span>
-  </button>
+<!-- ===== ヘッダー ===== -->
+<div class="site-header">
+  <span class="site-logo" onclick="showPage('shop')">Record Shop</span>
+  <div class="header-right">
+    <span class="admin-link" onclick="showPage('admin')">管理画面</span>
+    <button class="cart-btn" onclick="showShopTab('cart')">
+      カート <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </div>
 </div>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('shop')" id="tab-shop">商品一覧</div>
-  <div class="tab" onclick="switchTab('cart')" id="tab-cart">カート</div>
-  <div class="tab" onclick="switchTab('order')" id="tab-order">注文情報</div>
-</div>
-
-<!-- 商品一覧 -->
+<!-- ===== 注文サイト ===== -->
 <div class="page active" id="page-shop">
-  <input class="search-bar" type="text" placeholder="タイトル・アーティスト・JANコード・品番で検索..." oninput="doSearch(this.value)">
-  <div class="filter-row">
-    <button class="filter-btn active" onclick="setFilter('すべて',this)">すべて</button>
-    <button class="filter-btn" onclick="setFilter('CD',this)">CD</button>
-    <button class="filter-btn" onclick="setFilter('DVD',this)">DVD</button>
-    <button class="filter-btn" onclick="setFilter('レコード',this)">レコード</button>
+  <div class="shop-tabs">
+    <div class="shop-tab active" onclick="showShopTab('list')" id="shop-tab-list">商品一覧</div>
+    <div class="shop-tab" onclick="showShopTab('cart')" id="shop-tab-cart">カート</div>
+    <div class="shop-tab" onclick="showShopTab('order')" id="shop-tab-order">注文情報</div>
   </div>
 
-  <!-- PC表示 -->
-  <div class="table-wrap pc-only">
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th class="col-cat">種別</th>
-          <th class="col-title">タイトル</th>
-          <th class="col-artist">アーティスト</th>
-          <th class="col-jan">JANコード</th>
-          <th class="col-num">品番</th>
-          <th class="col-price" style="text-align:right">価格(税込)</th>
-          <th class="col-btn"></th>
-        </tr>
-      </thead>
-      <tbody id="pc-body"></tbody>
-    </table>
+  <!-- 商品一覧 -->
+  <div class="shop-tab-content active" id="shop-content-list">
+    <input class="search-bar" type="text" placeholder="タイトル・アーティスト・JANコード・品番で検索..." oninput="doShopSearch(this.value)">
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setShopFilter('すべて',this)">すべて</button>
+      <button class="filter-btn" onclick="setShopFilter('CD',this)">CD</button>
+      <button class="filter-btn" onclick="setShopFilter('DVD',this)">DVD</button>
+      <button class="filter-btn" onclick="setShopFilter('レコード',this)">レコード</button>
+    </div>
+    <table class="shop-tbl"><tbody id="shop-tbl-body"></tbody></table>
   </div>
 
-  <!-- スマホ表示 -->
-  <div class="sp-only">
-    <table class="sp-table">
-      <tbody id="sp-body"></tbody>
-    </table>
+  <!-- カート -->
+  <div class="shop-tab-content" id="shop-content-cart">
+    <div id="cart-content"></div>
+  </div>
+
+  <!-- 注文情報 -->
+  <div class="shop-tab-content" id="shop-content-order">
+    <div class="form-section">
+      <div class="section-title">注文内容</div>
+      <div class="order-summary-box" id="order-summary"></div>
+    </div>
+    <div class="form-section">
+      <div class="section-title">お客様情報</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">姓</label><input class="form-input" placeholder="山田" id="f-sei"></div>
+        <div class="form-group"><label class="form-label">名</label><input class="form-input" placeholder="太郎" id="f-mei"></div>
+      </div>
+      <div class="form-group"><label class="form-label">メールアドレス</label><input class="form-input" type="email" placeholder="taro@example.com" id="f-email"></div>
+      <div class="form-group"><label class="form-label">電話番号</label><input class="form-input" placeholder="090-0000-0000" id="f-tel"></div>
+      <div class="form-group"><label class="form-label">郵便番号</label><input class="form-input" placeholder="000-0000" id="f-zip"></div>
+      <div class="form-group"><label class="form-label">住所</label><input class="form-input" placeholder="東京都渋谷区..." id="f-addr"></div>
+    </div>
+    <div class="form-section">
+      <div class="section-title">お振込先</div>
+      <div class="bank-box">
+        <!-- ↓↓ 振込先情報をここに入力してください ↓↓ -->
+        <div class="bank-row"><span>銀行名</span><span class="bank-val">○○銀行 △△支店</span></div>
+        <div class="bank-row"><span>口座種別</span><span class="bank-val">普通</span></div>
+        <div class="bank-row"><span>口座番号</span><span class="bank-val">1234567</span></div>
+        <div class="bank-row"><span>名義</span><span class="bank-val">ヤマダ タロウ</span></div>
+        <!-- ↑↑ ここまで ↑↑ -->
+        <div class="bank-note">注文確認後7日以内にお振込みください</div>
+      </div>
+    </div>
+    <button class="submit-btn" onclick="submitOrder()">注文を確定する</button>
   </div>
 </div>
 
-<!-- カート -->
-<div class="page" id="page-cart">
-  <div id="cart-content"></div>
+<!-- ===== 管理画面 ===== -->
+<div class="page" id="page-admin">
+  <div class="admin-header">
+    <span class="admin-title">商品管理</span>
+    <div class="admin-btns">
+      <button class="btn" onclick="openCsvModal()">CSVインポート</button>
+      <button class="btn" onclick="exportCsv()">CSVエクスポート</button>
+      <button class="btn primary" onclick="openEditModal(null)">+ 商品を追加</button>
+    </div>
+  </div>
+  <div class="admin-toolbar">
+    <input class="admin-search" type="text" placeholder="タイトル・アーティスト・JAN検索" oninput="doAdminSearch(this.value)">
+    <select class="admin-select" onchange="doAdminFilterCat(this.value)">
+      <option value="">すべての種別</option>
+      <option>CD</option><option>DVD</option><option>レコード</option>
+    </select>
+    <select class="admin-select" onchange="doAdminFilterStatus(this.value)" style="font-size:11px">
+      <option value="">すべてのステータス</option>
+      <option>在庫あり:1～2営業日以内出荷</option>
+      <option>在庫あり:2～3営業日以内出荷</option>
+      <option>予約受付中:出荷日は商品タイトルに記載</option>
+      <option>当店在庫なし:取り寄せ可(3～5営業日以内出荷)</option>
+      <option>当店在庫なし:取り寄せ可(6～8営業日以内出荷)</option>
+      <option>当店在庫なし:入荷見込みなし</option>
+      <option>販売終了</option>
+      <option>非公開</option>
+    </select>
+    <span class="count-label" id="admin-count"></span>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="admin-tbl"><tbody id="admin-tbl-body"></tbody></table>
+  </div>
+  <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- 注文情報 -->
-<div class="page" id="page-order">
-  <div class="form-section">
-    <div class="section-title">注文内容</div>
-    <div class="order-summary-box" id="order-summary"></div>
-  </div>
-  <div class="form-section">
-    <div class="section-title">お客様情報</div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">姓</label><input class="form-input" placeholder="山田" id="f-sei"></div>
-      <div class="form-group"><label class="form-label">名</label><input class="form-input" placeholder="太郎" id="f-mei"></div>
+<!-- ===== 商品編集モーダル ===== -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="edit-modal-title">商品を追加</span>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
     </div>
-    <div class="form-group"><label class="form-label">メールアドレス</label><input class="form-input" type="email" placeholder="taro@example.com" id="f-email"></div>
-    <div class="form-group"><label class="form-label">電話番号</label><input class="form-input" placeholder="090-0000-0000" id="f-tel"></div>
-    <div class="form-group"><label class="form-label">郵便番号</label><input class="form-input" placeholder="000-0000" id="f-zip"></div>
-    <div class="form-group"><label class="form-label">住所</label><input class="form-input" placeholder="東京都渋谷区..." id="f-addr"></div>
-  </div>
-  <div class="form-section">
-    <div class="section-title">お振込先</div>
-    <div class="bank-box">
-      <div class="bank-row"><span>銀行名</span><span class="bank-val">○○銀行 △△支店</span></div>
-      <div class="bank-row"><span>口座種別</span><span class="bank-val">普通</span></div>
-      <div class="bank-row"><span>口座番号</span><span class="bank-val">1234567</span></div>
-      <div class="bank-row"><span>名義</span><span class="bank-val">ヤマダ タロウ</span></div>
-      <div class="bank-note">注文確認後7日以内にお振込みください</div>
+    <div class="modal-body">
+      <div class="full"><label class="modal-label">ステータス</label>
+        <select class="modal-select" id="f-status">
+          <option>在庫あり:1～2営業日以内出荷</option>
+          <option>在庫あり:2～3営業日以内出荷</option>
+          <option>予約受付中:出荷日は商品タイトルに記載</option>
+          <option>当店在庫なし:取り寄せ可(3～5営業日以内出荷)</option>
+          <option>当店在庫なし:取り寄せ可(6～8営業日以内出荷)</option>
+          <option>当店在庫なし:入荷見込みなし</option>
+          <option>販売終了</option>
+          <option>非公開</option>
+        </select>
+      </div>
+      <div><label class="modal-label">種別</label>
+        <select class="modal-select" id="f-cat"><option>CD</option><option>DVD</option><option>レコード</option></select>
+      </div>
+      <div><label class="modal-label">コンディション</label>
+        <select class="modal-select" id="f-cond"><option>新品</option><option>中古</option></select>
+      </div>
+      <div class="full"><label class="modal-label">タイトル</label><input class="modal-input" id="f-title" placeholder="タイトルを入力"></div>
+      <div class="full"><label class="modal-label">アーティスト</label><input class="modal-input" id="f-artist" placeholder="アーティスト名"></div>
+      <div><label class="modal-label">JANコード</label><input class="modal-input" id="f-jan" placeholder="4988031234567"></div>
+      <div><label class="modal-label">品番</label><input class="modal-input" id="f-num" placeholder="XXXX-0000"></div>
+      <div><label class="modal-label">発売日</label><input class="modal-input" type="date" id="f-date"></div>
+      <div><label class="modal-label">在庫数</label><input class="modal-input" type="number" id="f-stock" placeholder="0" min="0"></div>
+      <div class="full"><label class="modal-label">価格(税込)</label><input class="modal-input" type="number" id="f-price" placeholder="0" min="0"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeEditModal()">キャンセル</button>
+      <button class="btn primary" onclick="saveProduct()">保存</button>
     </div>
   </div>
-  <button class="submit-btn" onclick="submitOrder()">注文を確定する</button>
+</div>
+
+<!-- ===== CSVモーダル ===== -->
+<div class="modal-overlay" id="csv-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">CSVインポート</span>
+      <button class="modal-close" onclick="closeCsvModal()">✕</button>
+    </div>
+    <div style="padding:18px">
+      <div class="csv-note">
+        Googleスプレッドシートで「ファイル → ダウンロード → CSV(.csv)」で書き出したファイルを読み込めます。<br>
+        1行目はヘッダー行として扱われます。
+      </div>
+      <div class="csv-format">ステータス,種別,タイトル,アーティスト,JANコード,品番,コンディション,発売日,在庫数,価格</div>
+      <div class="file-drop" onclick="document.getElementById('csv-file').click()">
+        <div style="font-size:13px;color:#888">クリックしてCSVファイルを選択</div>
+        <div style="font-size:11px;color:#bbb;margin-top:4px">または .csv ファイルをここにドロップ</div>
+        <input type="file" id="csv-file" accept=".csv" style="display:none" onchange="readCsv(this)">
+      </div>
+      <div class="import-opt">
+        <label><input type="radio" name="import-mode" value="merge" checked> 既存データに追加・上書き（JANコードで照合）</label>
+        <label><input type="radio" name="import-mode" value="replace"> 全データを置き換える</label>
+      </div>
+      <div id="csv-preview" style="font-size:12px;color:#888;margin-top:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeCsvModal()">キャンセル</button>
+      <button class="btn primary" id="import-btn" onclick="doImport()" style="display:none">インポート実行</button>
+    </div>
+  </div>
 </div>
 
 <script>
 // ============================================================
-// 商品データ（ここを編集して商品を追加・変更してください）
+// 設定
 // ============================================================
-const products = [
-  {id:1, title:"Abbey Road",               artist:"The Beatles",     price:2800, cat:"レコード", jan:"4988031234567", num:"APCL-1234"},
-  {id:2, title:"Kind of Blue",             artist:"Miles Davis",     price:3200, cat:"レコード", jan:"4988031234568", num:"SICP-5678"},
-  {id:3, title:"Thriller",                 artist:"Michael Jackson", price:1800, cat:"CD",      jan:"4988031234569", num:"EICP-9012"},
-  {id:4, title:"Back in Black",            artist:"AC/DC",           price:1500, cat:"CD",      jan:"4988031234570", num:"MHCP-3456"},
-  {id:5, title:"Live at Budokan",          artist:"山下達郎",          price:4500, cat:"DVD",     jan:"4988031234571", num:"MOON-7890"},
-  {id:6, title:"Purple Rain",              artist:"Prince",          price:2200, cat:"レコード", jan:"4988031234572", num:"WPCR-1234"},
-  {id:7, title:"First Love",              artist:"宇多田ヒカル",        price:3800, cat:"DVD",     jan:"4988031234573", num:"TOCT-5678"},
-  {id:8, title:"The Dark Side of the Moon",artist:"Pink Floyd",      price:3500, cat:"レコード", jan:"4988031234574", num:"PHJR-9012"},
+const STATUS_CLASS = {
+  '在庫あり:1～2営業日以内出荷':               's-in1',
+  '在庫あり:2～3営業日以内出荷':               's-in2',
+  '予約受付中:出荷日は商品タイトルに記載':       's-rsv',
+  '当店在庫なし:取り寄せ可(3～5営業日以内出荷)': 's-ord1',
+  '当店在庫なし:取り寄せ可(6～8営業日以内出荷)': 's-ord2',
+  '当店在庫なし:入荷見込みなし':               's-noin',
+  '販売終了': 's-end',
+  '非公開':   's-hid',
+};
+const NO_ORDER = ['当店在庫なし:入荷見込みなし', '販売終了']; // カート不可
+const HIDDEN   = ['非公開'];                                  // ショップ非表示
+const POSTAGE  = 500;                                         // 送料（円）
+
+// ============================================================
+// 商品データ（初期サンプル）
+// ============================================================
+let products = [
+  {id:1,status:'在庫あり:1～2営業日以内出荷',         cat:'レコード',title:'Abbey Road',                 artist:'The Beatles',    jan:'4988031234567',num:'APCL-1234',cond:'中古',date:'1969-09-26',stock:3,price:2800},
+  {id:2,status:'在庫あり:2～3営業日以内出荷',         cat:'レコード',title:'Kind of Blue',               artist:'Miles Davis',    jan:'4988031234568',num:'SICP-5678',cond:'中古',date:'1959-08-17',stock:1,price:3200},
+  {id:3,status:'予約受付中:出荷日は商品タイトルに記載',cat:'CD',     title:'Thriller (2025年6月発売)',    artist:'Michael Jackson',jan:'4988031234569',num:'EICP-9012',cond:'新品',date:'2025-06-01',stock:0,price:1800},
+  {id:4,status:'当店在庫なし:取り寄せ可(3～5営業日以内出荷)',cat:'CD',title:'Back in Black',             artist:'AC/DC',          jan:'4988031234570',num:'MHCP-3456',cond:'新品',date:'1980-07-25',stock:0,price:1500},
+  {id:5,status:'当店在庫なし:取り寄せ可(6～8営業日以内出荷)',cat:'DVD',title:'Live at Budokan',          artist:'山下達郎',         jan:'4988031234571',num:'MOON-7890',cond:'新品',date:'2024-12-01',stock:0,price:4500},
+  {id:6,status:'当店在庫なし:入荷見込みなし',         cat:'レコード',title:'Purple Rain',               artist:'Prince',         jan:'4988031234572',num:'WPCR-1234',cond:'中古',date:'1984-06-25',stock:2,price:2200},
+  {id:7,status:'販売終了',                           cat:'DVD',     title:'First Love',                artist:'宇多田ヒカル',     jan:'4988031234573',num:'TOCT-5678',cond:'新品',date:'1999-03-10',stock:5,price:3800},
+  {id:8,status:'非公開',                            cat:'レコード',title:'The Dark Side of the Moon', artist:'Pink Floyd',     jan:'4988031234574',num:'PHJR-9012',cond:'中古',date:'1973-03-01',stock:2,price:3500},
 ];
+let nextId = 9;
 
-// 送料（円）
-const POSTAGE = 500;
+// 状態
+let cart = [];
+let adminSearch = '', adminFilterCat = '', adminFilterStatus = '';
+let shopSearch  = '', shopFilterCat  = 'すべて';
+let curPage = 1;
+const PER_PAGE = 20;
+let editingId = null, csvRows = [];
 
 // ============================================================
-let cart = [];
-let curFilter = 'すべて';
-let curSearch = '';
+// ページ・タブ切替
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'admin') renderAdmin();
+}
 
-function filtered() {
+function showShopTab(name) {
+  showPage('shop');
+  document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.shop-tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('shop-tab-' + name).classList.add('active');
+  document.getElementById('shop-content-' + name).classList.add('active');
+  if (name === 'cart')  renderCart();
+  if (name === 'order') renderOrderSummary();
+}
+
+// ============================================================
+// 注文サイト：商品一覧
+// ============================================================
+function shopFiltered() {
   return products.filter(p => {
-    const mc = curFilter === 'すべて' || p.cat === curFilter;
-    const s = curSearch.toLowerCase();
+    if (HIDDEN.includes(p.status)) return false;
+    const s = shopSearch.toLowerCase();
     const ms = s === '' || p.title.toLowerCase().includes(s) || p.artist.toLowerCase().includes(s) || p.jan.includes(s) || p.num.toLowerCase().includes(s);
-    return mc && ms;
+    return ms && (shopFilterCat === 'すべて' || p.cat === shopFilterCat);
   });
 }
 
-function setFilter(f, btn) {
-  curFilter = f;
+function setShopFilter(f, btn) {
+  shopFilterCat = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  render();
+  renderShop();
 }
 
-function doSearch(v) { curSearch = v; render(); }
+function doShopSearch(v) { shopSearch = v; renderShop(); }
 
-function render() {
-  const list = filtered();
-  const empty = '<tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa">該当商品なし</td></tr>';
-
-  // PC
-  const pcBody = document.getElementById('pc-body');
-  if (!list.length) { pcBody.innerHTML = empty; }
-  else {
-    pcBody.innerHTML = list.map(p => `
-      <tr>
-        <td><span class="cat-badge">${p.cat}</span></td>
-        <td style="font-weight:500">${p.title}</td>
-        <td style="color:#888">${p.artist}</td>
-        <td style="color:#888;font-size:12px">${p.jan}</td>
-        <td style="color:#888;font-size:12px">${p.num}</td>
-        <td style="text-align:right">¥${p.price.toLocaleString()}</td>
-        <td style="text-align:right"><button class="add-btn" onclick="addCart(${p.id})">カートへ</button></td>
-      </tr>`).join('');
+function renderShop() {
+  const list = shopFiltered();
+  const tbody = document.getElementById('shop-tbl-body');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td style="text-align:center;padding:36px;color:#bbb">該当商品なし</td></tr>';
+    return;
   }
-
-  // SP 2行テーブル
-  const spBody = document.getElementById('sp-body');
-  if (!list.length) { spBody.innerHTML = '<tr><td style="text-align:center;padding:32px;color:#aaa">該当商品なし</td></tr>'; }
-  else {
-    spBody.innerHTML = list.map(p => `
-      <tr class="r1">
-        <td class="t1">${p.title}</td>
-        <td class="t2" style="text-align:right"><span class="cat-badge">${p.cat}</span></td>
-        <td class="price-cell" rowspan="2">
-          ¥${p.price.toLocaleString()}
-          <button class="add-btn-sm" onclick="addCart(${p.id})">カートへ</button>
-        </td>
-      </tr>
-      <tr class="r2">
-        <td class="meta" colspan="2">${p.artist}　${p.num}　${p.jan}</td>
-      </tr>`).join('');
-  }
+  tbody.innerHTML = list.map(p => `
+    <tr class="r1">
+      <td class="t1">${p.title} <span style="font-size:11px;color:#aaa;font-weight:400">${p.artist}</span></td>
+      <td class="price-col">¥${p.price.toLocaleString()}</td>
+      <td class="btn-col">${NO_ORDER.includes(p.status)
+        ? '<span class="no-order-label">注文不可</span>'
+        : `<button class="add-btn" onclick="addCart(${p.id})">カートへ</button>`}</td>
+    </tr>
+    <tr class="r2">
+      <td class="meta" colspan="3">
+        <span class="cat-badge">${p.cat}</span><span class="cond-badge">${p.cond}</span>
+        ${p.num}　${p.jan}　<span class="status-badge ${STATUS_CLASS[p.status] || ''}">${p.status}</span>
+      </td>
+    </tr>`).join('');
 }
 
+// ============================================================
+// 注文サイト：カート
+// ============================================================
 function addCart(id) {
   const p = products.find(x => x.id === id);
+  if (!p) return;
   const e = cart.find(x => x.id === id);
-  if (e) e.qty++; else cart.push({...p, qty: 1});
-  updateBadge();
+  if (e) e.qty++; else cart.push({ ...p, qty: 1 });
+  updateCartBadge();
 }
 
-function updateBadge() {
-  document.getElementById('badge').textContent = cart.reduce((a, b) => a + b.qty, 0);
-}
-
-function renderCart() {
-  const el = document.getElementById('cart-content');
-  if (!cart.length) { el.innerHTML = '<div class="empty">カートに商品がありません</div>'; return; }
-  const total = cart.reduce((a, b) => a + b.price * b.qty, 0);
-  el.innerHTML = `
-    <div class="cart-list">${cart.map(item => `
-      <div class="cart-item">
-        <div class="cart-info">
-          <div class="cart-name">${item.title}</div>
-          <div class="cart-sub">${item.artist} / <span class="cat-badge">${item.cat}</span> / ${item.num}</div>
-          <div class="cart-price-line">¥${item.price.toLocaleString()} × ${item.qty} = ¥${(item.price * item.qty).toLocaleString()}</div>
-        </div>
-        <div class="qty-ctrl">
-          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-        </div>
-        <button class="remove-btn" onclick="removeCart(${item.id})">✕</button>
-      </div>`).join('')}
-    </div>
-    <div class="total-box">
-      <div class="total-row"><span>小計</span><span>¥${total.toLocaleString()}</span></div>
-      <div class="total-row"><span>送料</span><span>¥${POSTAGE.toLocaleString()}</span></div>
-      <div class="total-main"><span>合計</span><span>¥${(total + POSTAGE).toLocaleString()}</span></div>
-    </div>
-    <button class="proceed-btn" onclick="switchTab('order')">注文情報の入力へ →</button>`;
+function updateCartBadge() {
+  document.getElementById('cart-badge').textContent = cart.reduce((a, b) => a + b.qty, 0);
 }
 
 function changeQty(id, delta) {
@@ -335,19 +472,48 @@ function changeQty(id, delta) {
   if (!item) return;
   item.qty += delta;
   if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
-  updateBadge();
+  updateCartBadge();
   renderCart();
 }
 
 function removeCart(id) {
   cart = cart.filter(x => x.id !== id);
-  updateBadge();
+  updateCartBadge();
   renderCart();
+}
+
+function renderCart() {
+  const el = document.getElementById('cart-content');
+  if (!cart.length) { el.innerHTML = '<div class="empty-cart">カートに商品がありません</div>'; return; }
+  const total = cart.reduce((a, b) => a + b.price * b.qty, 0);
+  el.innerHTML = `
+    <div class="cart-list">
+      ${cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-info">
+            <div class="cart-name">${item.title}</div>
+            <div class="cart-sub">${item.artist} / <span class="cat-badge">${item.cat}</span> / ${item.num}</div>
+            <div class="cart-price-line">¥${item.price.toLocaleString()} × ${item.qty} = ¥${(item.price * item.qty).toLocaleString()}</div>
+          </div>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeCart(${item.id})">✕</button>
+        </div>`).join('')}
+    </div>
+    <div class="total-box">
+      <div class="total-row"><span>小計</span><span>¥${total.toLocaleString()}</span></div>
+      <div class="total-row"><span>送料</span><span>¥${POSTAGE.toLocaleString()}</span></div>
+      <div class="total-main"><span>合計</span><span>¥${(total + POSTAGE).toLocaleString()}</span></div>
+    </div>
+    <button class="proceed-btn" onclick="showShopTab('order')">注文情報の入力へ →</button>`;
 }
 
 function renderOrderSummary() {
   const el = document.getElementById('order-summary');
-  if (!cart.length) { el.innerHTML = '<div style="color:#aaa;font-size:13px">カートが空です</div>'; return; }
+  if (!cart.length) { el.innerHTML = '<div style="font-size:13px;color:#bbb">カートが空です</div>'; return; }
   const total = cart.reduce((a, b) => a + b.price * b.qty, 0);
   el.innerHTML = `
     <div class="order-summary-title">注文商品</div>
@@ -355,25 +521,191 @@ function renderOrderSummary() {
     <div class="order-total-row"><span>合計（送料込）</span><span>¥${(total + POSTAGE).toLocaleString()}</span></div>`;
 }
 
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  document.getElementById('page-' + name).classList.add('active');
-  if (name === 'cart') renderCart();
-  if (name === 'order') renderOrderSummary();
-}
-
 function submitOrder() {
-  const sei = document.getElementById('f-sei').value;
-  const mei = document.getElementById('f-mei').value;
-  const email = document.getElementById('f-email').value;
-  if (!sei || !mei || !email) { alert('姓・名・メールアドレスは必須です'); return; }
+  if (!document.getElementById('f-sei').value.trim() || !document.getElementById('f-mei').value.trim() || !document.getElementById('f-email').value.trim()) {
+    alert('姓・名・メールアドレスは必須です'); return;
+  }
   if (!cart.length) { alert('カートに商品がありません'); return; }
+  // TODO: ここにFormspreeの送信処理を追加する
   alert('注文を受け付けました！\n確認メールをお送りします。\n7日以内にお振込みをお願いします。');
 }
 
-render();
+// ============================================================
+// 管理画面
+// ============================================================
+function adminFiltered() {
+  return products.filter(p => {
+    const s = adminSearch.toLowerCase();
+    const ms = s === '' || p.title.toLowerCase().includes(s) || p.artist.toLowerCase().includes(s) || p.jan.includes(s) || p.num.toLowerCase().includes(s);
+    return ms && (adminFilterCat === '' || p.cat === adminFilterCat) && (adminFilterStatus === '' || p.status === adminFilterStatus);
+  });
+}
+
+function doAdminSearch(v)       { adminSearch = v;       curPage = 1; renderAdmin(); }
+function doAdminFilterCat(v)    { adminFilterCat = v;    curPage = 1; renderAdmin(); }
+function doAdminFilterStatus(v) { adminFilterStatus = v; curPage = 1; renderAdmin(); }
+
+function renderAdmin() {
+  const list  = adminFiltered();
+  const total = list.length;
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (curPage > pages) curPage = 1;
+  const slice = list.slice((curPage - 1) * PER_PAGE, curPage * PER_PAGE);
+  document.getElementById('admin-count').textContent = total + '件';
+
+  const tbody = document.getElementById('admin-tbl-body');
+  if (!slice.length) {
+    tbody.innerHTML = '<tr><td style="text-align:center;padding:32px;color:#bbb">該当商品なし</td></tr>';
+    renderPagination(0, 1); return;
+  }
+  tbody.innerHTML = slice.map(p => {
+    const hidden = p.status === '非公開';
+    return `
+      <tr class="r1${hidden ? ' hidden-row' : ''}">
+        <td class="title-cell">
+          <span class="status-badge ${STATUS_CLASS[p.status] || 's-hid'}" style="margin-right:6px">${p.status}</span>
+          <span style="font-weight:500">${p.title}</span> <span style="font-size:11px;color:#aaa;font-weight:400">${p.artist}</span>
+        </td>
+        <td class="admin-price-col">¥${p.price.toLocaleString()}</td>
+        <td class="admin-action-col">
+          <button class="act-btn" onclick="openEditModal(${p.id})">編集</button>
+          <button class="act-btn del" onclick="deleteProduct(${p.id})">削除</button>
+        </td>
+      </tr>
+      <tr class="r2${hidden ? ' hidden-row' : ''}">
+        <td class="meta-cell" colspan="3">
+          <span class="cat-badge">${p.cat}</span><span class="cond-badge">${p.cond}</span>
+          ${p.jan}　${p.num}　在庫:${p.stock}　${p.date || ''}
+        </td>
+      </tr>`;
+  }).join('');
+  renderPagination(total, pages);
+}
+
+function renderPagination(total, pages) {
+  const el = document.getElementById('pagination');
+  if (pages <= 1) { el.innerHTML = ''; return; }
+  let h = '';
+  for (let i = 1; i <= pages; i++) h += `<button class="page-btn${i === curPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  h += `<span class="page-info">${curPage} / ${pages} ページ</span>`;
+  el.innerHTML = h;
+}
+
+function goPage(p) { curPage = p; renderAdmin(); }
+
+function openEditModal(id) {
+  editingId = id;
+  document.getElementById('edit-modal-title').textContent = id ? '商品を編集' : '商品を追加';
+  if (id) {
+    const p = products.find(x => x.id === id);
+    document.getElementById('f-status').value = p.status;
+    document.getElementById('f-cat').value    = p.cat;
+    document.getElementById('f-cond').value   = p.cond;
+    document.getElementById('f-title').value  = p.title;
+    document.getElementById('f-artist').value = p.artist;
+    document.getElementById('f-jan').value    = p.jan;
+    document.getElementById('f-num').value    = p.num;
+    document.getElementById('f-date').value   = p.date || '';
+    document.getElementById('f-stock').value  = p.stock;
+    document.getElementById('f-price').value  = p.price;
+  } else {
+    ['f-title','f-artist','f-jan','f-num','f-date','f-stock','f-price'].forEach(x => document.getElementById(x).value = '');
+    document.getElementById('f-status').value = '在庫あり:1～2営業日以内出荷';
+    document.getElementById('f-cat').value    = 'CD';
+    document.getElementById('f-cond').value   = '新品';
+  }
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal() { document.getElementById('edit-modal').classList.remove('open'); }
+
+function saveProduct() {
+  const p = {
+    status: document.getElementById('f-status').value,
+    cat:    document.getElementById('f-cat').value,
+    cond:   document.getElementById('f-cond').value,
+    title:  document.getElementById('f-title').value.trim(),
+    artist: document.getElementById('f-artist').value.trim(),
+    jan:    document.getElementById('f-jan').value.trim(),
+    num:    document.getElementById('f-num').value.trim(),
+    date:   document.getElementById('f-date').value,
+    stock:  parseInt(document.getElementById('f-stock').value) || 0,
+    price:  parseInt(document.getElementById('f-price').value) || 0,
+  };
+  if (!p.title) { alert('タイトルを入力してください'); return; }
+  if (editingId) {
+    const idx = products.findIndex(x => x.id === editingId);
+    products[idx] = { ...products[idx], ...p };
+  } else {
+    products.unshift({ id: nextId++, ...p });
+  }
+  closeEditModal();
+  renderAdmin();
+  renderShop();
+}
+
+function deleteProduct(id) {
+  if (!confirm('この商品を削除しますか？')) return;
+  products = products.filter(x => x.id !== id);
+  renderAdmin();
+  renderShop();
+}
+
+// ============================================================
+// CSV インポート／エクスポート
+// ============================================================
+function openCsvModal() {
+  csvRows = [];
+  document.getElementById('csv-preview').textContent = '';
+  document.getElementById('import-btn').style.display = 'none';
+  document.getElementById('csv-file').value = '';
+  document.getElementById('csv-modal').classList.add('open');
+}
+function closeCsvModal() { document.getElementById('csv-modal').classList.remove('open'); }
+
+function readCsv(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split(/\r?\n/).filter(l => l.trim());
+    csvRows = lines.slice(1).map(line => {
+      const c = line.split(',');
+      return { status:c[0]||'在庫あり:1～2営業日以内出荷', cat:c[1]||'CD', title:c[2]||'', artist:c[3]||'', jan:c[4]||'', num:c[5]||'', cond:c[6]||'新品', date:c[7]||'', stock:parseInt(c[8])||0, price:parseInt(c[9])||0 };
+    }).filter(r => r.title);
+    document.getElementById('csv-preview').textContent = csvRows.length + '件のデータを読み込みました';
+    document.getElementById('import-btn').style.display = '';
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function doImport() {
+  const mode = document.querySelector('input[name="import-mode"]:checked').value;
+  if (mode === 'replace') {
+    products = csvRows.map((r, i) => ({ id: nextId + i, ...r }));
+    nextId += csvRows.length;
+  } else {
+    csvRows.forEach(r => {
+      const idx = products.findIndex(p => p.jan && p.jan === r.jan);
+      if (idx >= 0) products[idx] = { ...products[idx], ...r };
+      else products.unshift({ id: nextId++, ...r });
+    });
+  }
+  closeCsvModal(); renderAdmin(); renderShop();
+  alert(csvRows.length + '件をインポートしました');
+}
+
+function exportCsv() {
+  const header = 'ステータス,種別,タイトル,アーティスト,JANコード,品番,コンディション,発売日,在庫数,価格';
+  const rows = products.map(p => [p.status,p.cat,p.title,p.artist,p.jan,p.num,p.cond,p.date||'',p.stock,p.price].join(','));
+  const blob = new Blob(['\uFEFF' + header + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'products.csv'; a.click();
+}
+
+// ============================================================
+// 初期描画
+// ============================================================
+renderShop();
+renderAdmin();
 </script>
 </body>
 </html>
