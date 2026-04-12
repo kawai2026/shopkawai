@@ -4,39 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ショップカワイ本店</title>
+<link rel="stylesheet" href="common.css">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f9f9f7;color:#1a1a18;font-size:15px}
-
-/* ========== 共通 ========== */
-.btn{padding:7px 16px;border:1px solid #d0d0cc;border-radius:8px;font-size:13px;cursor:pointer;background:#fff;color:#1a1a18}
-.btn:hover{background:#f3f3f0}
-.btn.primary{background:#1a1a18;color:#fff;border-color:#1a1a18}
-.btn.primary:hover{opacity:.85}
-.status-badge{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;display:inline-block;line-height:1.5}
-.cat-badge{font-size:11px;padding:2px 7px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
-.cond-badge{font-size:11px;padding:2px 7px;border-radius:10px;background:#f0f0ec;color:#666;margin-right:4px}
-.s-in1{background:#e1f5ee;color:#085041}
-.s-in2{background:#d4f0e6;color:#0f6e56}
-.s-rsv{background:#e6f1fb;color:#0c447c}
-.s-ord1{background:#faeeda;color:#633806}
-.s-ord2{background:#f5e4c8;color:#854f0b}
-.s-noin{background:#f0f0ec;color:#999}
-.s-end{background:#fdecea;color:#c0392b}
-.s-hid{background:#f0f0ec;color:#999;font-style:italic}
-
-/* ========== ヘッダー ========== */
-.site-header{background:#fff;border-bottom:1px solid #e8e8e4;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
-.site-logo{font-size:22px;font-weight:600;letter-spacing:.02em}
-.cart-btn{background:#fff;border:1px solid #d0d0cc;border-radius:8px;padding:8px 18px;font-size:14px;cursor:pointer;color:#1a1a18;display:flex;align-items:center;gap:6px}
-.cart-btn:hover{background:#f3f3f0}
-.cart-badge{background:#e24b4a;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
-
-/* ========== ページ切替 ========== */
-.page{display:none}
-.page.active{display:block}
-
-/* ========== 注文サイト ========== */
+/* ========== 注文サイト固有 ========== */
 .shop-tabs{background:#fff;border-bottom:1px solid #e8e8e4;display:flex;padding:0 20px}
 .shop-tab{padding:11px 18px;font-size:14px;cursor:pointer;color:#999;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
 .shop-tab.active{color:#1a1a18;border-bottom-color:#1a1a18;font-weight:500}
@@ -49,7 +19,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
 .filter-btn{padding:6px 15px;border:1px solid #d8d8d4;border-radius:20px;font-size:13px;cursor:pointer;background:#fff;color:#666}
 .filter-btn.active{background:#1a1a18;color:#fff;border-color:#1a1a18}
 
-/* 2行テーブル（注文サイト） */
+/* お買い物ガイドバナー */
+.guide-banner{background:#f5f5f2;border:1px solid #e8e8e4;border-radius:10px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.guide-banner-text{font-size:13px;color:#666}
+.guide-banner-link{font-size:13px;color:#1a1a18;font-weight:500;text-decoration:none;white-space:nowrap}
+.guide-banner-link:hover{text-decoration:underline}
+
+/* 2行テーブル */
 .shop-tbl{width:100%;border-collapse:collapse;font-size:14px}
 .shop-tbl .r1 td{padding:11px 8px 4px;border-top:1px solid #d0d0cc;vertical-align:middle}
 .shop-tbl .r2 td{padding:3px 8px 11px;vertical-align:top}
@@ -79,51 +55,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
 .total-box{background:#f5f5f2;border-radius:12px;padding:15px;margin-bottom:15px}
 .total-row{display:flex;justify-content:space-between;font-size:14px;color:#999;margin-bottom:5px}
 .total-main{display:flex;justify-content:space-between;font-size:16px;font-weight:600;color:#1a1a18;padding-top:10px;border-top:1px solid #e0e0dc;margin-top:4px}
-.proceed-btn{width:100%;padding:13px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer}
+.proceed-btn{width:100%;padding:13px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:10px}
 .proceed-btn:hover{opacity:.85}
 .empty-cart{text-align:center;padding:44px;color:#bbb;font-size:14px}
 
 /* 注文フォーム */
 .form-section{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:17px;margin-bottom:15px}
 .section-title{font-size:15px;font-weight:600;color:#1a1a18;margin-bottom:15px;padding-bottom:9px;border-bottom:1px solid #f0f0ec}
-.form-group{margin-bottom:13px}
-.form-label{font-size:12px;color:#999;margin-bottom:5px;display:block;font-weight:500;letter-spacing:.03em}
-.form-input,.form-select{width:100%;padding:10px 13px;border:1px solid #d8d8d4;border-radius:8px;font-size:14px;color:#1a1a18;background:#fff;outline:none;font-family:inherit}
-.form-input:focus,.form-select:focus{border-color:#888}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.bank-box{background:#f5f5f2;border-radius:10px;padding:15px}
-.bank-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;color:#999;border-bottom:1px solid #ebebeb}
+.bank-box{background:#f5f5f2;border-radius:10px;padding:15px;margin-bottom:10px}
+.bank-box-title{font-size:13px;font-weight:500;color:#888;margin-bottom:8px}
+.bank-row{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;color:#999;border-bottom:1px solid #ebebeb}
 .bank-row:last-of-type{border-bottom:none}
 .bank-val{color:#1a1a18;font-weight:500}
-.bank-note{margin-top:10px;font-size:12px;color:#bbb}
-.submit-btn{width:100%;padding:15px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px}
-.submit-btn:hover{opacity:.85}
+.bank-note{margin-top:12px;font-size:12px;color:#bbb}
+.shipping-info-box{background:#f5f5f2;border-radius:8px;padding:10px 13px;font-size:13px;color:#666;margin-top:8px;display:none}
+
+/* 注文サマリー */
 .order-summary-box{background:#f5f5f2;border-radius:12px;padding:15px;margin-bottom:6px}
 .order-summary-title{font-weight:600;font-size:14px;color:#1a1a18;margin-bottom:9px}
 .order-item-row{display:flex;justify-content:space-between;font-size:13px;color:#999;padding:4px 0}
 .order-total-row{display:flex;justify-content:space-between;font-weight:600;font-size:14px;color:#1a1a18;padding-top:9px;margin-top:4px;border-top:1px solid #e0e0dc}
-
-/* 都道府県選択（宅配便用） */
-.pref-select-wrap{display:none;margin-top:8px}
-.pref-select-wrap.visible{display:block}
-.shipping-info{background:#f5f5f2;border-radius:8px;padding:10px 13px;font-size:13px;color:#666;margin-top:8px}
-
-/* ========== レスポンシブ ========== */
-@media(max-width:600px){
-  .form-row{grid-template-columns:1fr}
-}
 </style>
 </head>
 <body>
 
-<div class="site-header">
-  <span class="site-logo">ショップカワイ本店</span>
+<header class="site-header">
+  <a href="index.html" class="site-logo">ショップカワイ本店</a>
   <button class="cart-btn" onclick="showShopTab('cart')">
     カート <span class="cart-badge" id="cart-badge">0</span>
   </button>
-</div>
+</header>
 
-<div class="page active" id="page-shop">
+<main>
   <div class="shop-tabs">
     <div class="shop-tab active" onclick="showShopTab('list')" id="shop-tab-list">商品一覧</div>
     <div class="shop-tab" onclick="showShopTab('cart')" id="shop-tab-cart">カート</div>
@@ -132,11 +95,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
 
   <!-- 商品一覧 -->
   <div class="shop-tab-content active" id="shop-content-list">
+    <div class="guide-banner">
+      <span class="guide-banner-text">初めてのご利用ですか？ご注文の流れ・お支払い方法などをご案内しています。</span>
+      <a href="guide.html" class="guide-banner-link">お買い物ガイド →</a>
+    </div>
     <input class="search-bar" type="text" placeholder="タイトル・アーティスト・JANコード・品番で検索..." oninput="doShopSearch(this.value)">
-    <div class="filter-row">
+    <div class="filter-row" id="filter-row">
       <button class="filter-btn active" onclick="setShopFilter('すべて',this)">すべて</button>
       <button class="filter-btn" onclick="setShopFilter('CD',this)">CD</button>
       <button class="filter-btn" onclick="setShopFilter('DVD',this)">DVD</button>
+      <button class="filter-btn" onclick="setShopFilter('Blu-ray',this)">Blu-ray</button>
       <button class="filter-btn" onclick="setShopFilter('レコード',this)">レコード</button>
     </div>
     <table class="shop-tbl"><tbody id="shop-tbl-body"></tbody></table>
@@ -164,110 +132,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
       <div class="form-group"><label class="form-label">郵便番号</label><input class="form-input" placeholder="000-0000" id="f-zip"></div>
       <div class="form-group"><label class="form-label">住所</label><input class="form-input" placeholder="東京都渋谷区..." id="f-addr"></div>
       <div class="form-group" id="pref-group" style="display:none">
-        <label class="form-label">お届け先の都道府県</label>
-        <select class="form-select" id="f-pref" onchange="updateShipping()">
+        <label class="form-label">お届け先の都道府県（宅配便送料の計算に使用します）</label>
+        <select class="form-select" id="f-pref" onchange="updateShippingDisplay()">
           <option value="">選択してください</option>
-          <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option>
-          <option>山形県</option><option>福島県</option><option>茨城県</option><option>栃木県</option><option>群馬県</option>
-          <option>埼玉県</option><option>千葉県</option><option>東京都</option><option>神奈川県</option><option>新潟県</option>
-          <option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
-          <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option><option>滋賀県</option>
-          <option>京都府</option><option>大阪府</option><option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
-          <option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
-          <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option>
-          <option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option>
-          <option>鹿児島県</option><option>沖縄県</option>
+          <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option>東京都</option><option>神奈川県</option><option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option><option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option><option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option><option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option><option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option><option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
         </select>
+        <div class="shipping-info-box" id="shipping-info-box"></div>
       </div>
-      <div class="shipping-info" id="shipping-info" style="display:none"></div>
     </div>
     <div class="form-section">
       <div class="section-title">お振込先</div>
-      <div class="bank-box">
-        <!-- ↓↓ 振込先情報をここに入力してください ↓↓ -->
-        <div class="bank-row"><span>銀行名</span><span class="bank-val">○○銀行 △△支店</span></div>
-        <div class="bank-row"><span>口座種別</span><span class="bank-val">普通</span></div>
-        <div class="bank-row"><span>口座番号</span><span class="bank-val">1234567</span></div>
-        <div class="bank-row"><span>名義</span><span class="bank-val">ヤマダ タロウ</span></div>
-        <!-- ↑↑ ここまで ↑↑ -->
-        <div class="bank-note">注文確認後7日以内にお振込みください</div>
-      </div>
+      <div id="bank-accounts-display"></div>
+      <div class="bank-note">注文確認後7日以内にお振込みください</div>
     </div>
     <button class="submit-btn" onclick="submitOrder()">注文を確定する</button>
   </div>
-</div>
+</main>
 
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="guide.html" class="footer-link">お買い物ガイド</a>
+    <a href="legal.html" class="footer-link">特定商取引法に基づく表記</a>
+    <a href="privacy.html" class="footer-link">プライバシーポリシー</a>
+    <a href="terms.html" class="footer-link">利用規約</a>
+    <a href="contact.html" class="footer-link">お問い合わせ</a>
+  </div>
+  <div class="footer-copy">© SHOP KAWAI All Rights Reserved.</div>
+</footer>
+
+<script src="shared.js"></script>
 <script>
-// ============================================================
-// 設定
-// ============================================================
-const STATUS_CLASS = {
-  '在庫あり:1～2営業日以内出荷':               's-in1',
-  '在庫あり:2～3営業日以内出荷':               's-in2',
-  '予約受付中:出荷日は商品タイトルに記載':       's-rsv',
-  '当店在庫なし:取り寄せ可(3～5営業日以内出荷)': 's-ord1',
-  '当店在庫なし:取り寄せ可(6～8営業日以内出荷)': 's-ord2',
-  '当店在庫なし:入荷見込みなし':               's-noin',
-  '販売終了': 's-end',
-  '非公開':   's-hid',
-};
-const NO_ORDER = ['当店在庫なし:入荷見込みなし', '販売終了'];
-const HIDDEN   = ['非公開'];
-
-// ============================================================
-// localStorage からデータ読み込み
-// ============================================================
-function loadProducts() {
-  try {
-    const d = localStorage.getItem('skProducts');
-    return d ? JSON.parse(d) : getDefaultProducts();
-  } catch(e) { return getDefaultProducts(); }
-}
-
-function loadShippingMethods() {
-  try {
-    const d = localStorage.getItem('skShipping');
-    return d ? JSON.parse(d) : getDefaultShipping();
-  } catch(e) { return getDefaultShipping(); }
-}
-
-function getDefaultProducts() {
-  return [
-    {id:1,status:'在庫あり:1～2営業日以内出荷',cat:'レコード',title:'Abbey Road',artist:'The Beatles',jan:'4988031234567',num:'APCL-1234',cond:'中古',date:'1969-09-26',stock:3,price:2800,shippingId:1},
-    {id:2,status:'在庫あり:2～3営業日以内出荷',cat:'レコード',title:'Kind of Blue',artist:'Miles Davis',jan:'4988031234568',num:'SICP-5678',cond:'中古',date:'1959-08-17',stock:1,price:3200,shippingId:1},
-    {id:3,status:'予約受付中:出荷日は商品タイトルに記載',cat:'CD',title:'Thriller (2025年6月発売)',artist:'Michael Jackson',jan:'4988031234569',num:'EICP-9012',cond:'新品',date:'2025-06-01',stock:0,price:1800,shippingId:2},
-    {id:4,status:'当店在庫なし:取り寄せ可(3～5営業日以内出荷)',cat:'CD',title:'Back in Black',artist:'AC/DC',jan:'4988031234570',num:'MHCP-3456',cond:'新品',date:'1980-07-25',stock:0,price:1500,shippingId:2},
-    {id:5,status:'当店在庫なし:取り寄せ可(6～8営業日以内出荷)',cat:'DVD',title:'Live at Budokan',artist:'山下達郎',jan:'4988031234571',num:'MOON-7890',cond:'新品',date:'2024-12-01',stock:0,price:4500,shippingId:3},
-    {id:6,status:'当店在庫なし:入荷見込みなし',cat:'レコード',title:'Purple Rain',artist:'Prince',jan:'4988031234572',num:'WPCR-1234',cond:'中古',date:'1984-06-25',stock:2,price:2200,shippingId:1},
-    {id:7,status:'販売終了',cat:'DVD',title:'First Love',artist:'宇多田ヒカル',jan:'4988031234573',num:'TOCT-5678',cond:'新品',date:'1999-03-10',stock:5,price:3800,shippingId:2},
-    {id:8,status:'非公開',cat:'レコード',title:'The Dark Side of the Moon',artist:'Pink Floyd',jan:'4988031234574',num:'PHJR-9012',cond:'中古',date:'1973-03-01',stock:2,price:3500,shippingId:1},
-  ];
-}
-
-function getDefaultShipping() {
-  return [
-    {id:1, name:'メール便', type:'flat', flatFee:200, isDefault:true},
-    {id:2, name:'宅配便', type:'pref', prefFees:{
-      '北海道':1500,'青森県':1200,'岩手県':1200,'宮城県':1200,'秋田県':1200,'山形県':1200,'福島県':1100,
-      '茨城県':800,'栃木県':800,'群馬県':800,'埼玉県':800,'千葉県':800,'東京都':800,'神奈川県':800,
-      '新潟県':900,'富山県':900,'石川県':900,'福井県':900,'山梨県':900,'長野県':900,
-      '岐阜県':900,'静岡県':900,'愛知県':900,'三重県':900,
-      '滋賀県':1000,'京都府':1000,'大阪府':1000,'兵庫県':1000,'奈良県':1000,'和歌山県':1000,
-      '鳥取県':1100,'島根県':1100,'岡山県':1100,'広島県':1100,'山口県':1100,
-      '徳島県':1200,'香川県':1200,'愛媛県':1200,'高知県':1200,
-      '福岡県':1200,'佐賀県':1200,'長崎県':1200,'熊本県':1200,'大分県':1200,'宮崎県':1200,'鹿児島県':1200,
-      '沖縄県':1800
-    }, isDefault:false},
-    {id:3, name:'送料無料', type:'free', flatFee:0, isDefault:false},
-  ];
-}
-
-let products = loadProducts();
-let shippingMethods = loadShippingMethods();
-
-// ============================================================
-// 状態
-// ============================================================
+let products = SK.loadProducts();
+let shippingMethods = SK.loadShipping();
+let bankAccounts = SK.loadBankAccounts();
 let cart = [];
 let shopSearch = '', shopFilterCat = 'すべて';
 
@@ -280,36 +177,30 @@ function showShopTab(name) {
   document.getElementById('shop-tab-' + name).classList.add('active');
   document.getElementById('shop-content-' + name).classList.add('active');
   if (name === 'cart')  renderCart();
-  if (name === 'order') renderOrderSummary();
+  if (name === 'order') { renderOrderSummary(); renderBankAccounts(); }
 }
 
 // ============================================================
-// 注文サイト：商品一覧
+// 商品一覧
 // ============================================================
 function shopFiltered() {
   return products.filter(p => {
-    if (HIDDEN.includes(p.status)) return false;
+    if (SK.HIDDEN.includes(p.status)) return false;
     const s = shopSearch.toLowerCase();
     const ms = s === '' || p.title.toLowerCase().includes(s) || p.artist.toLowerCase().includes(s) || p.jan.includes(s) || p.num.toLowerCase().includes(s);
     return ms && (shopFilterCat === 'すべて' || p.cat === shopFilterCat);
   });
 }
-
 function setShopFilter(f, btn) {
   shopFilterCat = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderShop();
 }
-
 function doShopSearch(v) { shopSearch = v; renderShop(); }
 
-function getShipping(id) {
-  return shippingMethods.find(s => s.id === id) || shippingMethods.find(s => s.isDefault) || shippingMethods[0];
-}
-
 function shippingLabel(shippingId) {
-  const s = getShipping(shippingId);
+  const s = SK.getShipping(shippingId, shippingMethods);
   if (!s) return '';
   if (s.type === 'free') return '送料無料';
   if (s.type === 'flat') return s.name + ' ¥' + s.flatFee.toLocaleString();
@@ -320,23 +211,18 @@ function shippingLabel(shippingId) {
 function renderShop() {
   const list = shopFiltered();
   const tbody = document.getElementById('shop-tbl-body');
-  if (!list.length) {
-    tbody.innerHTML = '<tr><td style="text-align:center;padding:40px;color:#bbb">該当商品なし</td></tr>';
-    return;
-  }
+  if (!list.length) { tbody.innerHTML = '<tr><td style="text-align:center;padding:40px;color:#bbb">該当商品なし</td></tr>'; return; }
   tbody.innerHTML = list.map(p => `
     <tr class="r1">
       <td class="t1">${p.title} <span style="font-size:12px;color:#aaa;font-weight:400">${p.artist}</span></td>
       <td class="price-col">¥${p.price.toLocaleString()}</td>
-      <td class="btn-col">${NO_ORDER.includes(p.status)
-        ? '<span class="no-order-label">注文不可</span>'
-        : `<button class="add-btn" onclick="addCart(${p.id})">カートへ</button>`}</td>
+      <td class="btn-col">${SK.NO_ORDER.includes(p.status) ? '<span class="no-order-label">注文不可</span>' : `<button class="add-btn" onclick="addCart(${p.id})">カートへ</button>`}</td>
     </tr>
     <tr class="r2">
       <td class="meta" colspan="3">
         <span class="cat-badge">${p.cat}</span><span class="cond-badge">${p.cond}</span>
-        ${p.num}　${p.jan}　<span class="status-badge ${STATUS_CLASS[p.status] || ''}">${p.status}</span>
-        　<span style="color:#bbb">${shippingLabel(p.shippingId)}</span>
+        ${p.num}　${p.jan}　<span class="status-badge ${SK.STATUS_CLASS[p.status] || ''}">${p.status}</span>
+        　<span style="color:#ccc">${shippingLabel(p.shippingId)}</span>
       </td>
     </tr>`).join('');
 }
@@ -345,179 +231,126 @@ function renderShop() {
 // カート
 // ============================================================
 function addCart(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
+  const p = products.find(x => x.id === id); if (!p) return;
   const e = cart.find(x => x.id === id);
   if (e) e.qty++; else cart.push({ ...p, qty: 1 });
   updateCartBadge();
 }
-
 function updateCartBadge() {
   document.getElementById('cart-badge').textContent = cart.reduce((a, b) => a + b.qty, 0);
 }
-
 function changeQty(id, delta) {
-  const item = cart.find(x => x.id === id);
-  if (!item) return;
+  const item = cart.find(x => x.id === id); if (!item) return;
   item.qty += delta;
   if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
-  updateCartBadge();
-  renderCart();
+  updateCartBadge(); renderCart();
 }
-
 function removeCart(id) {
   cart = cart.filter(x => x.id !== id);
-  updateCartBadge();
-  renderCart();
+  updateCartBadge(); renderCart();
 }
 
-function calcShippingFee(shippingId, pref) {
-  const s = getShipping(shippingId);
-  if (!s) return 0;
-  if (s.type === 'free') return 0;
-  if (s.type === 'flat') return s.flatFee;
-  if (s.type === 'pref') {
-    if (!pref) return null; // 未選択
-    return s.prefFees[pref] || 0;
-  }
-  return 0;
+function getShippingLines() {
+  const lines = []; const seen = new Set();
+  cart.forEach(item => {
+    if (!seen.has(item.shippingId)) { seen.add(item.shippingId); const s = SK.getShipping(item.shippingId, shippingMethods); if (s) lines.push(s); }
+  });
+  return lines;
 }
 
 function renderCart() {
   const el = document.getElementById('cart-content');
   if (!cart.length) { el.innerHTML = '<div class="empty-cart">カートに商品がありません</div>'; return; }
   const subtotal = cart.reduce((a, b) => a + b.price * b.qty, 0);
-
-  // 配送方法ごとにグループ化して送料を計算（最高額を代表送料とする）
-  const shippingLines = [];
-  const seen = new Set();
-  cart.forEach(item => {
-    const sid = item.shippingId;
-    if (!seen.has(sid)) {
-      seen.add(sid);
-      const s = getShipping(sid);
-      if (s) shippingLines.push(s);
-    }
-  });
-
+  const shippingLines = getShippingLines();
   const hasPref = shippingLines.some(s => s.type === 'pref');
+  const fixedShipping = shippingLines.reduce((a, s) => a + (s.type === 'flat' ? s.flatFee : 0), 0);
 
   el.innerHTML = `
-    <div class="cart-list">
-      ${cart.map(item => `
-        <div class="cart-item">
-          <div class="cart-info">
-            <div class="cart-name">${item.title}</div>
-            <div class="cart-sub">${item.artist} / <span class="cat-badge">${item.cat}</span> / ${item.num}</div>
-            <div class="cart-price-line">¥${item.price.toLocaleString()} × ${item.qty} = ¥${(item.price * item.qty).toLocaleString()}　<span style="color:#bbb;font-size:12px">${shippingLabel(item.shippingId)}</span></div>
-          </div>
-          <div class="qty-ctrl">
-            <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-            <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
-          </div>
-          <button class="remove-btn" onclick="removeCart(${item.id})">✕</button>
-        </div>`).join('')}
+    <div class="cart-list">${cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-info">
+          <div class="cart-name">${item.title}</div>
+          <div class="cart-sub">${item.artist} / <span class="cat-badge">${item.cat}</span> / ${item.num}</div>
+          <div class="cart-price-line">¥${item.price.toLocaleString()} × ${item.qty} = ¥${(item.price*item.qty).toLocaleString()}　<span style="color:#ccc;font-size:12px">${shippingLabel(item.shippingId)}</span></div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        </div>
+        <button class="remove-btn" onclick="removeCart(${item.id})">✕</button>
+      </div>`).join('')}
     </div>
     <div class="total-box">
       <div class="total-row"><span>小計</span><span>¥${subtotal.toLocaleString()}</span></div>
       ${shippingLines.map(s => {
         if (s.type === 'free') return `<div class="total-row"><span>${s.name}</span><span>¥0（送料無料）</span></div>`;
         if (s.type === 'flat') return `<div class="total-row"><span>${s.name}</span><span>¥${s.flatFee.toLocaleString()}</span></div>`;
-        if (s.type === 'pref') return `<div class="total-row"><span>${s.name}</span><span>都道府県により異なります</span></div>`;
-        return '';
+        return `<div class="total-row"><span>${s.name}</span><span>都道府県により異なります</span></div>`;
       }).join('')}
-      ${hasPref ? '' : `<div class="total-main"><span>合計</span><span>¥${(subtotal + shippingLines.reduce((a,s)=>a+(s.type==='flat'?s.flatFee:0),0)).toLocaleString()}</span></div>`}
-      ${hasPref ? '<div class="total-main"><span>合計</span><span>注文情報で確定</span></div>' : ''}
+      <div class="total-main"><span>合計</span><span>${hasPref ? '注文情報で確定' : '¥' + (subtotal + fixedShipping).toLocaleString()}</span></div>
     </div>
-    <button class="proceed-btn" onclick="showShopTab(\'order\')">注文情報の入力へ →</button>`;
+    <button class="proceed-btn" onclick="showShopTab('order')">注文情報の入力へ →</button>
+    <div style="text-align:center"><a href="guide.html" style="font-size:13px;color:#999;text-decoration:none">お買い物ガイドを見る →</a></div>`;
 }
 
 // ============================================================
 // 注文情報
 // ============================================================
+function renderBankAccounts() {
+  bankAccounts = SK.loadBankAccounts();
+  const el = document.getElementById('bank-accounts-display');
+  el.innerHTML = bankAccounts.map((b, i) => `
+    <div class="bank-box" style="${i > 0 ? 'margin-top:10px' : ''}">
+      ${bankAccounts.length > 1 ? `<div class="bank-box-title">${i+1}つ目の口座</div>` : ''}
+      <div class="bank-row"><span>銀行名</span><span class="bank-val">${b.bankName} ${b.branch}</span></div>
+      <div class="bank-row"><span>口座種別</span><span class="bank-val">${b.type}</span></div>
+      <div class="bank-row"><span>口座番号</span><span class="bank-val">${b.number}</span></div>
+      <div class="bank-row"><span>名義</span><span class="bank-val">${b.holder}</span></div>
+    </div>`).join('');
+}
+
 function renderOrderSummary() {
   const el = document.getElementById('order-summary');
   if (!cart.length) { el.innerHTML = '<div style="font-size:14px;color:#bbb">カートが空です</div>'; return; }
-
   const subtotal = cart.reduce((a, b) => a + b.price * b.qty, 0);
-  const shippingLines = [];
-  const seen = new Set();
-  cart.forEach(item => {
-    const sid = item.shippingId;
-    if (!seen.has(sid)) {
-      seen.add(sid);
-      const s = getShipping(sid);
-      if (s) shippingLines.push(s);
-    }
-  });
+  const shippingLines = getShippingLines();
   const hasPref = shippingLines.some(s => s.type === 'pref');
-
-  // 都道府県選択欄の表示制御
   document.getElementById('pref-group').style.display = hasPref ? 'block' : 'none';
 
   el.innerHTML = `
     <div class="order-summary-title">注文商品</div>
-    ${cart.map(item => `<div class="order-item-row"><span>${item.title} × ${item.qty}</span><span>¥${(item.price * item.qty).toLocaleString()}</span></div>`).join('')}
+    ${cart.map(item => `<div class="order-item-row"><span>${item.title} × ${item.qty}</span><span>¥${(item.price*item.qty).toLocaleString()}</span></div>`).join('')}
     <div class="order-item-row" style="padding-top:6px;border-top:1px solid #eee;margin-top:4px"><span>小計</span><span>¥${subtotal.toLocaleString()}</span></div>
     ${shippingLines.map(s => {
       if (s.type === 'free') return `<div class="order-item-row"><span>${s.name}</span><span>¥0</span></div>`;
       if (s.type === 'flat') return `<div class="order-item-row"><span>${s.name}</span><span>¥${s.flatFee.toLocaleString()}</span></div>`;
-      if (s.type === 'pref') return `<div class="order-item-row"><span>${s.name}</span><span id="pref-fee-display">都道府県を選択</span></div>`;
-      return '';
+      return `<div class="order-item-row"><span>${s.name}</span><span id="pref-fee-display">都道府県を選択してください</span></div>`;
     }).join('')}
     <div class="order-total-row"><span>合計</span><span id="order-total-display">—</span></div>`;
-
-  updateShipping();
+  updateShippingDisplay();
 }
 
-function updateShipping() {
+function updateShippingDisplay() {
   const pref = document.getElementById('f-pref') ? document.getElementById('f-pref').value : '';
-  const cart2 = cart;
-  const shippingLines = [];
-  const seen = new Set();
-  cart2.forEach(item => {
-    const sid = item.shippingId;
-    if (!seen.has(sid)) {
-      seen.add(sid);
-      const s = getShipping(sid);
-      if (s) shippingLines.push(s);
-    }
-  });
-
-  const subtotal = cart2.reduce((a, b) => a + b.price * b.qty, 0);
-  let shippingTotal = 0;
-  let allCalc = true;
-
+  const subtotal = cart.reduce((a, b) => a + b.price * b.qty, 0);
+  const shippingLines = getShippingLines();
+  let total = subtotal; let allCalc = true;
   shippingLines.forEach(s => {
-    if (s.type === 'free') { /* 0 */ }
-    else if (s.type === 'flat') { shippingTotal += s.flatFee; }
+    if (s.type === 'flat') total += s.flatFee;
     else if (s.type === 'pref') {
-      if (pref && s.prefFees[pref] !== undefined) {
-        shippingTotal += s.prefFees[pref];
+      if (pref && s.prefFees && s.prefFees[pref] !== undefined) {
+        total += s.prefFees[pref];
         const el = document.getElementById('pref-fee-display');
         if (el) el.textContent = '¥' + s.prefFees[pref].toLocaleString();
-      } else {
-        allCalc = false;
-      }
+        const box = document.getElementById('shipping-info-box');
+        if (box) { box.style.display = 'block'; box.textContent = pref + 'への' + s.name + '送料：¥' + s.prefFees[pref].toLocaleString(); }
+      } else { allCalc = false; }
     }
   });
-
   const totalEl = document.getElementById('order-total-display');
-  if (totalEl) {
-    totalEl.textContent = allCalc ? '¥' + (subtotal + shippingTotal).toLocaleString() : '—（都道府県を選択）';
-  }
-
-  // 送料案内
-  const infoEl = document.getElementById('shipping-info');
-  if (infoEl) {
-    if (pref) {
-      infoEl.style.display = 'block';
-      infoEl.textContent = pref + 'への送料が反映されました。';
-    } else {
-      infoEl.style.display = 'none';
-    }
-  }
+  if (totalEl) totalEl.textContent = allCalc ? '¥' + total.toLocaleString() : '—（都道府県を選択）';
 }
 
 function submitOrder() {
@@ -525,10 +358,8 @@ function submitOrder() {
     alert('姓・名・メールアドレスは必須です'); return;
   }
   if (!cart.length) { alert('カートに商品がありません'); return; }
-  const hasPref = cart.some(item => { const s = getShipping(item.shippingId); return s && s.type === 'pref'; });
-  if (hasPref && !document.getElementById('f-pref').value) {
-    alert('都道府県を選択してください'); return;
-  }
+  const hasPref = getShippingLines().some(s => s.type === 'pref');
+  if (hasPref && !document.getElementById('f-pref').value) { alert('都道府県を選択してください'); return; }
   // TODO: Formspreeの送信処理をここに追加
   alert('注文を受け付けました！\n確認メールをお送りします。\n7日以内にお振込みをお願いします。');
 }

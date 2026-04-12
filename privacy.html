@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プライバシーポリシー - ショップカワイ本店</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<header class="site-header">
+  <a href="index.html" class="site-logo">ショップカワイ本店</a>
+  <a href="index.html" class="cart-btn">← 商品一覧へ戻る</a>
+</header>
+<main>
+  <div class="sub-page-wrap">
+    <h1>プライバシーポリシー</h1>
+    <div id="privacy-content"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="footer-links">
+    <a href="guide.html" class="footer-link">お買い物ガイド</a>
+    <a href="legal.html" class="footer-link">特定商取引法に基づく表記</a>
+    <a href="privacy.html" class="footer-link">プライバシーポリシー</a>
+    <a href="terms.html" class="footer-link">利用規約</a>
+    <a href="contact.html" class="footer-link">お問い合わせ</a>
+  </div>
+  <div class="footer-copy">© SHOP KAWAI All Rights Reserved.</div>
+</footer>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('privacy-content').innerHTML = SK.mdToHtml(SK.loadPrivacy());
+</script>
+</body>
+</html>
