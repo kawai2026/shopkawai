@@ -353,15 +353,85 @@ function updateShippingDisplay() {
   if (totalEl) totalEl.textContent = allCalc ? '¥' + total.toLocaleString() : '—（都道府県を選択）';
 }
 
+// ★ GASのウェブアプリURLをここに貼り付けてください
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyKlvFzQMqtLLIy0GfIrIOE_CoX_Kl46GRCWMx7UN4iCY130HKUMxC_nfdXf2WojrC6Cw/exec';
+
 function submitOrder() {
   if (!document.getElementById('f-sei').value.trim() || !document.getElementById('f-mei').value.trim() || !document.getElementById('f-email').value.trim()) {
     alert('姓・名・メールアドレスは必須です'); return;
   }
   if (!cart.length) { alert('カートに商品がありません'); return; }
   const hasPref = getShippingLines().some(s => s.type === 'pref');
-  if (hasPref && !document.getElementById('f-pref').value) { alert('都道府県を選択してください'); return; }
-  // TODO: Formspreeの送信処理をここに追加
-  alert('注文を受け付けました！\n確認メールをお送りします。\n7日以内にお振込みをお願いします。');
+  const pref = document.getElementById('f-pref') ? document.getElementById('f-pref').value : '';
+  if (hasPref && !pref) { alert('都道府県を選択してください'); return; }
+
+  // 送料計算
+  const subtotal = cart.reduce((a, b) => a + b.price * b.qty, 0);
+  const shippingLines = getShippingLines();
+  let shippingFee = 0;
+  let shippingMethod = '';
+  shippingLines.forEach(s => {
+    shippingMethod += (shippingMethod ? '・' : '') + s.name;
+    if (s.type === 'flat') shippingFee += s.flatFee;
+    else if (s.type === 'pref' && pref && s.prefFees) shippingFee += s.prefFees[pref] || 0;
+  });
+  const total = subtotal + shippingFee;
+
+  // 振込先情報をテキスト化
+  const banks = SK.loadBankAccounts();
+  const bankInfo = banks.map(b =>
+    `${b.bankName} ${b.branch}　${b.type}　${b.number}　${b.holder}`
+  ).join('\n');
+
+  // 送信データを組み立て
+  const payload = {
+    sei:            document.getElementById('f-sei').value.trim(),
+    mei:            document.getElementById('f-mei').value.trim(),
+    email:          document.getElementById('f-email').value.trim(),
+    tel:            document.getElementById('f-tel').value.trim(),
+    zip:            document.getElementById('f-zip').value.trim(),
+    addr:           document.getElementById('f-addr').value.trim(),
+    pref:           pref,
+    items:          cart.map(item => ({
+      title:    item.title,
+      artist:   item.artist,
+      cat:      item.cat,
+      num:      item.num,
+      qty:      item.qty,
+      price:    item.price,
+      subtotal: item.price * item.qty,
+    })),
+    subtotal:       subtotal,
+    shippingFee:    shippingFee,
+    shippingMethod: shippingMethod,
+    total:          total,
+    bankInfo:       bankInfo,
+  };
+
+  // ボタンを無効化して二重送信防止
+  const submitBtn = document.querySelector('.submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '送信中...';
+
+  fetch(GAS_URL, {
+    method: 'POST',
+    mode:   'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  .then(() => {
+    alert('注文を受け付けました！\nご登録のメールアドレスに確認メールをお送りします。\n7日以内にお振込みをお願いします。');
+    cart = [];
+    updateCartBadge();
+    showShopTab('list');
+  })
+  .catch(() => {
+    alert('通信エラーが発生しました。時間をおいて再度お試しください。');
+  })
+  .finally(() => {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '注文を確定する';
+  });
 }
 
 // ============================================================
