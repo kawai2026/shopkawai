@@ -7,14 +7,23 @@
 <link rel="stylesheet" href="common.css">
 <style>
 .contact-wrap{max-width:620px;margin:0 auto;padding:28px 20px 40px}
-.contact-wrap h1{font-size:20px;font-weight:600;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid #e8e8e4}
+.contact-wrap h1{font-size:20px;font-weight:600;color:#1a1a18;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid #e8e8e4}
 .contact-note{font-size:13px;color:#888;margin-bottom:22px;line-height:1.7}
 .contact-form-card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:20px}
+.form-group{margin-bottom:13px}
+.form-label{font-size:12px;color:#999;margin-bottom:5px;display:block;font-weight:500;letter-spacing:.03em}
 .required-mark{color:#c0392b;font-size:11px;margin-left:4px}
+.form-input,.form-textarea{width:100%;padding:10px 13px;border:1px solid #d8d8d4;border-radius:8px;font-size:14px;color:#1a1a18;background:#fff;outline:none;font-family:inherit}
+.form-input:focus,.form-textarea:focus{border-color:#888}
+.form-textarea{resize:vertical;min-height:120px}
+.submit-btn{width:100%;padding:14px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px}
+.submit-btn:hover{opacity:.85}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
 .contact-sent{text-align:center;padding:40px 20px;background:#fff;border:1px solid #e8e8e4;border-radius:12px}
-.contact-sent-icon{font-size:36px;margin-bottom:12px}
-.contact-sent-title{font-size:17px;font-weight:600;margin-bottom:8px}
+.contact-sent-icon{font-size:36px;margin-bottom:12px;color:#1a1a18}
+.contact-sent-title{font-size:17px;font-weight:600;margin-bottom:8px;color:#1a1a18}
 .contact-sent-text{font-size:14px;color:#888;line-height:1.7}
+.not-ready{color:#bbb;text-align:center;padding:30px;font-size:13px}
 </style>
 </head>
 <body>
@@ -26,7 +35,7 @@
   <div class="contact-wrap">
     <h1>お問い合わせ</h1>
     <p class="contact-note">以下のフォームにご入力のうえ、送信してください。<br>通常2〜3営業日以内にご返答いたします。</p>
-    <div class="contact-form-card" id="contact-form-area"></div>
+    <div class="contact-form-card" id="contact-area"></div>
   </div>
 </main>
 <footer class="site-footer">
@@ -39,46 +48,92 @@
   </div>
   <div class="footer-copy">© SHOP KAWAI All Rights Reserved.</div>
 </footer>
-<script src="shared.js"></script>
 <script>
-const fields = SK.loadContactFields();
-const endpoint = SK.loadContactEmail();
-const area = document.getElementById('contact-form-area');
+// localStorage から直接読み込む（shared.js 不要）
+function loadJSON(key, fallback) {
+  try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : fallback; }
+  catch(e) { return fallback; }
+}
 
-if (!fields.length) {
-  area.innerHTML = '<div style="color:#bbb;text-align:center;padding:30px">お問い合わせフォームは現在準備中です。</div>';
-} else {
-  const formId = 'contact-form';
-  const action = endpoint ? `action="${endpoint}"` : '';
-  area.innerHTML = `
-    <form id="${formId}" method="POST" ${action}>
-      ${fields.map(f => {
-        const req = f.required ? 'required' : '';
-        const reqMark = f.required ? '<span class="required-mark">必須</span>' : '';
-        let input = '';
-        if (f.type === 'textarea') {
-          input = `<textarea class="form-textarea" name="${f.label}" id="cf-${f.id}" ${req} placeholder="${f.label}を入力してください"></textarea>`;
-        } else {
-          input = `<input class="form-input" type="${f.type}" name="${f.label}" id="cf-${f.id}" ${req} placeholder="${f.label}を入力してください">`;
-        }
-        return `<div class="form-group"><label class="form-label" for="cf-${f.id}">${f.label}${reqMark}</label>${input}</div>`;
-      }).join('')}
-      <button type="submit" class="submit-btn">送信する</button>
-    </form>`;
+const DEFAULT_FIELDS = [
+  {id:1, label:'お名前',       type:'text',     required:true},
+  {id:2, label:'メールアドレス', type:'email',    required:true},
+  {id:3, label:'ご質問内容',    type:'textarea', required:true},
+];
 
-  document.getElementById(formId).addEventListener('submit', function(e) {
-    if (!endpoint) {
-      e.preventDefault();
-      area.innerHTML = `
-        <div class="contact-sent">
-          <div class="contact-sent-icon">✓</div>
-          <div class="contact-sent-title">お問い合わせを受け付けました</div>
-          <div class="contact-sent-text">ご連絡いただきありがとうございます。<br>2〜3営業日以内にご返答いたします。</div>
-        </div>`;
+const fields  = loadJSON('skContactFields', DEFAULT_FIELDS);
+const GAS_URL = loadJSON('skContactEmail',  '');
+const area    = document.getElementById('contact-area');
+
+function buildForm() {
+  if (!fields.length) {
+    area.innerHTML = '<div class="not-ready">お問い合わせフォームは現在準備中です。</div>';
+    return;
+  }
+  area.innerHTML =
+    fields.map(f => {
+      const reqMark = f.required ? '<span class="required-mark">必須</span>' : '';
+      const inp = f.type === 'textarea'
+        ? `<textarea class="form-textarea" id="cf-${f.id}" placeholder="${f.label}を入力してください"></textarea>`
+        : `<input class="form-input" type="${f.type}" id="cf-${f.id}" placeholder="${f.label}を入力してください">`;
+      return `<div class="form-group"><label class="form-label" for="cf-${f.id}">${f.label}${reqMark}</label>${inp}</div>`;
+    }).join('') +
+    `<button class="submit-btn" id="submit-btn" onclick="submitContact()">送信する</button>`;
+}
+
+function submitContact() {
+  // 必須チェック
+  let valid = true;
+  fields.forEach(f => {
+    if (f.required) {
+      const el = document.getElementById('cf-' + f.id);
+      if (el && !el.value.trim()) { valid = false; el.focus(); }
     }
-    // endpoint が設定されている場合はFormspreeなどに通常送信される
+  });
+  if (!valid) { alert('必須項目をすべて入力してください'); return; }
+
+  if (!GAS_URL) {
+    alert('送信先が設定されていません。\n管理画面の「お問い合わせ設定」でGASのURLを設定してください。');
+    return;
+  }
+
+  // 入力内容を収集
+  const formFields = {};
+  let emailVal = '';
+  fields.forEach(f => {
+    const el = document.getElementById('cf-' + f.id);
+    if (el) {
+      formFields[f.label] = el.value.trim();
+      if (f.type === 'email') emailVal = el.value.trim();
+    }
+  });
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+
+  fetch(GAS_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ type: 'contact', fields: formFields, email: emailVal }),
+  })
+  .then(() => {
+    area.innerHTML = `
+      <div class="contact-sent">
+        <div class="contact-sent-icon">✓</div>
+        <div class="contact-sent-title">お問い合わせを受け付けました</div>
+        <div class="contact-sent-text">ご連絡いただきありがとうございます。<br>2〜3営業日以内にご返答いたします。</div>
+      </div>`;
+  })
+  .catch(() => {
+    alert('通信エラーが発生しました。時間をおいて再度お試しください。');
+    btn.disabled = false;
+    btn.textContent = '送信する';
   });
 }
+
+buildForm();
 </script>
 </body>
 </html>
