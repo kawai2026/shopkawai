@@ -63,7 +63,12 @@ const DEFAULT_FIELDS = [
 
 const fields  = loadJSON('skContactFields', DEFAULT_FIELDS);
 const GAS_URL = loadJSON('skContactEmail',  '');
+const intro   = loadJSON('skContactIntro',  '以下のフォームにご入力のうえ、送信してください。\n通常2〜3営業日以内にご返答いたします。');
 const area    = document.getElementById('contact-area');
+
+// フォーム上部メッセージを表示
+const noteEl = document.querySelector('.contact-note');
+if (noteEl) noteEl.innerHTML = intro.replace(/\n/g, '<br>');
 
 function buildForm() {
   if (!fields.length) {
@@ -119,12 +124,17 @@ function submitContact() {
     body:    JSON.stringify({ type: 'contact', fields: formFields, email: emailVal }),
   })
   .then(() => {
-    area.innerHTML = `
-      <div class="contact-sent">
-        <div class="contact-sent-icon">✓</div>
-        <div class="contact-sent-title">お問い合わせを受け付けました</div>
-        <div class="contact-sent-text">ご連絡いただきありがとうございます。<br>2〜3営業日以内にご返答いたします。</div>
-      </div>`;
+    const msg = loadJSON('skContactSentMessage', {
+      title: 'お問い合わせを受け付けました',
+      body:  'ご連絡いただきありがとうございます。\n2〜3営業日以内にご返答いたします。',
+    });
+    const bodyHtml = msg.body.replace(/\n/g, '<br>');
+    area.innerHTML =
+      '<div class="contact-sent">' +
+      '<div class="contact-sent-icon">✓</div>' +
+      '<div class="contact-sent-title">' + msg.title + '</div>' +
+      '<div class="contact-sent-text">' + bodyHtml + '</div>' +
+      '</div>';
   })
   .catch(() => {
     alert('通信エラーが発生しました。時間をおいて再度お試しください。');

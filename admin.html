@@ -248,6 +248,30 @@
       </div>
     </div>
     <div class="settings-card">
+      <div class="settings-card-header"><span class="settings-card-title">フォーム上部メッセージ</span></div>
+      <div class="settings-card-body">
+        <div class="form-group">
+          <label class="form-label">フォームの上に表示する説明文</label>
+          <textarea class="form-input" id="contact-intro-input" rows="3" placeholder="以下のフォームにご入力のうえ、送信してください。&#10;通常2〜3営業日以内にご返答いたします。" style="resize:vertical"></textarea>
+        </div>
+        <button class="btn primary" onclick="saveContactIntro()">保存</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-header"><span class="settings-card-title">送信完了メッセージ</span></div>
+      <div class="settings-card-body">
+        <div class="form-group">
+          <label class="form-label">タイトル</label>
+          <input class="form-input" id="contact-sent-title-input" placeholder="お問い合わせを受け付けました" style="max-width:400px">
+        </div>
+        <div class="form-group">
+          <label class="form-label">本文</label>
+          <textarea class="form-input" id="contact-sent-body-input" rows="3" placeholder="ご連絡いただきありがとうございます。&#10;2〜3営業日以内にご返答いたします。" style="resize:vertical"></textarea>
+        </div>
+        <button class="btn primary" onclick="saveContactSentMessage()">保存</button>
+      </div>
+    </div>
+    <div class="settings-card">
       <div class="settings-card-header"><span class="settings-card-title">フォーム項目</span></div>
       <div class="settings-card-body" id="contact-fields-list"></div>
     </div>
@@ -711,6 +735,11 @@ function renderContact() {
   contactFields = SK.loadContactFields();
   const email = SK.loadContactEmail();
   document.getElementById('contact-email-input').value = email;
+  const intro = SK.load('skContactIntro', () => '以下のフォームにご入力のうえ、送信してください。\n通常2〜3営業日以内にご返答いたします。');
+  document.getElementById('contact-intro-input').value = intro;
+  const sentMsg = SK.load('skContactSentMessage', () => ({ title: 'お問い合わせを受け付けました', body: 'ご連絡いただきありがとうございます。\n2〜3営業日以内にご返答いたします。' }));
+  document.getElementById('contact-sent-title-input').value = sentMsg.title || '';
+  document.getElementById('contact-sent-body-input').value = sentMsg.body || '';
   const el = document.getElementById('contact-fields-list');
   if(!contactFields.length){ el.innerHTML='<div style="color:#bbb;font-size:13px">項目がありません</div>'; return; }
   const typeLabels = {text:'テキスト',email:'メール',tel:'電話番号',textarea:'テキスト（複数行）'};
@@ -726,6 +755,20 @@ function renderContact() {
 function saveContactEmail() {
   SK.saveContactEmail(document.getElementById('contact-email-input').value.trim());
   alert('送信先メールアドレスを保存しました');
+}
+function saveContactIntro() {
+  const text = document.getElementById('contact-intro-input').value.trim()
+    || '以下のフォームにご入力のうえ、送信してください。\n通常2〜3営業日以内にご返答いたします。';
+  SK.save('skContactIntro', text);
+  alert('フォーム上部メッセージを保存しました');
+}
+function saveContactSentMessage() {
+  const msg = {
+    title: document.getElementById('contact-sent-title-input').value.trim() || 'お問い合わせを受け付けました',
+    body:  document.getElementById('contact-sent-body-input').value.trim()  || 'ご連絡いただきありがとうございます。\n2〜3営業日以内にご返答いたします。',
+  };
+  SK.save('skContactSentMessage', msg);
+  alert('送信完了メッセージを保存しました');
 }
 function openContactFieldModal(id) {
   editingCfId=id;
