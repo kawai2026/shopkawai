@@ -6,7 +6,17 @@
 <title>管理画面 - ショップカワイ本店</title>
 <link rel="stylesheet" href="common.css">
 <style>
-/* ========== 管理画面固有 ========== */
+/* ========== パスワード保護 ========== */
+.pw-overlay{position:fixed;inset:0;background:#1a1a18;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.pw-box{background:#fff;border-radius:14px;padding:36px 32px;width:100%;max-width:360px;text-align:center}
+.pw-logo{font-size:18px;font-weight:600;color:#1a1a18;margin-bottom:6px}
+.pw-sub{font-size:13px;color:#999;margin-bottom:24px}
+.pw-input{width:100%;padding:11px 14px;border:1px solid #d8d8d4;border-radius:8px;font-size:15px;color:#1a1a18;background:#fff;outline:none;text-align:center;letter-spacing:.1em;margin-bottom:12px}
+.pw-input:focus{border-color:#888}
+.pw-input.error{border-color:#e24b4a;background:#fdf5f5}
+.pw-btn{width:100%;padding:12px;background:#1a1a18;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer}
+.pw-btn:hover{opacity:.85}
+.pw-error{font-size:12px;color:#e24b4a;margin-top:8px;min-height:18px}
 .admin-site-header{background:#1a1a18;padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
 .admin-logo-wrap{display:flex;align-items:center;gap:8px}
 .admin-logo{font-size:18px;font-weight:600;color:#fff;letter-spacing:.02em}
@@ -99,6 +109,20 @@
 </style>
 </head>
 <body>
+
+<!-- ===== パスワード入力画面 ===== -->
+<div class="pw-overlay" id="pw-overlay">
+  <div class="pw-box">
+    <div class="pw-logo">ショップカワイ本店</div>
+    <div class="pw-sub">管理画面</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="パスワードを入力"
+      onkeydown="if(event.key==='Enter')checkPassword()">
+    <button class="pw-btn" onclick="checkPassword()">ログイン</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
+<div id="admin-body" style="display:none">
 
 <header class="admin-site-header">
   <div class="admin-logo-wrap">
@@ -794,6 +818,45 @@ function deleteContactField(id) {
 // 初期描画
 // ============================================================
 renderAdmin();
+</script>
+</div><!-- /#admin-body -->
+
+<script>
+// ============================================================
+// パスワード保護
+// ★ パスワードをここに設定してください（英数字推奨）
+// ============================================================
+const ADMIN_PASSWORD = '8484kawai2026';
+
+// セッション中はパスワード済みとして保持
+const SESSION_KEY = 'skAdminAuth';
+
+function checkPassword() {
+  const input = document.getElementById('pw-input').value;
+  if (input === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('pw-overlay').style.display = 'none';
+    document.getElementById('admin-body').style.display = 'block';
+    document.getElementById('pw-error').textContent = '';
+  } else {
+    const inputEl = document.getElementById('pw-input');
+    inputEl.classList.add('error');
+    document.getElementById('pw-error').textContent = 'パスワードが違います';
+    inputEl.value = '';
+    inputEl.focus();
+    setTimeout(() => inputEl.classList.remove('error'), 1500);
+  }
+}
+
+// ページを開いた時にセッションチェック
+(function() {
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    document.getElementById('pw-overlay').style.display = 'none';
+    document.getElementById('admin-body').style.display = 'block';
+  } else {
+    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+  }
+})();
 </script>
 </body>
 </html>
